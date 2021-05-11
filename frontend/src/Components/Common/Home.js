@@ -9,7 +9,7 @@ export default function Home() {
         <img
           className="h-full w-full object-cover"
           src="https://images.unsplash.com/photo-1548184274-f1d3776448b3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80"
-          alt="People working on laptops"
+          alt="Bg "
         />
         <div
           className="absolute inset-0 bg-gradient-to-r from-gray-900 to-yellow-200"
@@ -22,6 +22,7 @@ export default function Home() {
             <img
               className="mx-auto"
               src="https://user-images.githubusercontent.com/34866653/117778542-60c19700-b25b-11eb-83c0-3d0df8086a00.png"
+              alt="Assure logo"
             />
             {/* Link : logomakr.com/8Z8BeB */}
             <span className="block text-3xl font-bold text-white">

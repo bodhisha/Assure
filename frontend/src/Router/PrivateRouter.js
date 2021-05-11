@@ -1,18 +1,22 @@
 import { useRoutes, useRedirect, navigate } from "hookrouter";
 import React from "react";
 import Navbar from "../Components/Navbar/Navbar";
-import UserProfile from "../Components/UserProfile";
+import UserDashboard from "../Components/UserDashboard/UserDashboard";
+import UserHistory from "../Components/UserDashboard/UserHistory";
+import UserProfile from "../Components/UserDashboard/UserProfile";
 
 const routes = {
-  "/home": () => <UserProfile />,
+  "/dashboard": () => <UserDashboard />,
+  "/profile": () => <UserProfile />,
+  "/history": () => <UserHistory />,
 };
 
 const PrivateRouter = () => {
-  useRedirect("/", "/home");
+  useRedirect("/", "/dashboard");
   const pages = useRoutes(routes);
   !pages && navigate("/");
   return (
-    <div className="relative bg-gray-200 min-h-screen">
+    <div className="relative flex bg-gray-200 min-h-screen">
       <Navbar />
       {pages}
       {!pages && (
