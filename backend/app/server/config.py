@@ -11,7 +11,6 @@ if os.getenv("HEROKU_DEPLOYMENT") is True:
         "CLOUDINARY_API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
         "MONGODB_URL": os.getenv("MONGODB_URL"),
         "DEFAULT_AVATAR": os.getenv("DEFAULT_AVATAR"),
-        "THRESHOLD": os.getenv("THRESHOLD")
     }
 
 else:
