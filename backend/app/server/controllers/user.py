@@ -12,16 +12,17 @@ def user_helper(user) -> dict:
         "user_id": str(user["_id"]),
         "name": user["name"],
         "email": user["email"],
+        "role": user["role"],
         "profile_picture": user["profile_picture"],
         "description": user["description"],
     }
 
 
 # Retrieve all users present in the database
-async def retrieve_users(lightweight: bool = False):
+async def retrieve_users():
     users = []
     async for user in users_collection.find():
-            users.append(user_helper_lightweight(user))
+        users.append(user)
     return users
 
 

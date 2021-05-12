@@ -4,11 +4,13 @@ import axios from "axios";
 import { validateEmailAddress, validatePassword } from "../Utils/validations";
 import { Loading } from "../Common/Loader";
 import { toast } from "react-toastify";
+import { USER_TYPES } from "../../Common/constants";
 
 export default function Register({ onToggle }) {
   const initForm = {
     name: "",
     email: "",
+    role: USER_TYPES[0].type,
     password: "",
     confirm_password: "",
     description: "",
@@ -83,6 +85,7 @@ export default function Register({ onToggle }) {
       var bodyFormData = new FormData();
       bodyFormData.append("name", form.name);
       bodyFormData.append("email", form.email);
+      bodyFormData.append("role", form.role);
       bodyFormData.append("password", form.password);
       bodyFormData.append("confirm_password", form.confirm_password);
       bodyFormData.append("description", form.description);
@@ -175,6 +178,38 @@ export default function Register({ onToggle }) {
                 />
                 <div className="text-xs italic text-red-500">{error.email}</div>
               </div>
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="email"
+                >
+                  Role
+                </label>
+                <div className="relative">
+                  <select
+                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-indigo-100 leading-tight focus:outline-none focus:shadow-outline"
+                    name="role"
+                    value={form.role}
+                    onChange={handleChange}
+                  >
+                    {USER_TYPES.map((item) => (
+                      <option value={item.type} key={item.type}>
+                        {item.text}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
               <div className="mb-2">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"

@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
+from enum import Enum
 
 
 class UserSchema(BaseModel):
@@ -19,6 +20,11 @@ class UserSchema(BaseModel):
                 "description": "This is John Doe"
             }
         }
+
+
+class Roles(str, Enum):
+    CUSTOMER = 'CUSTOMER'
+    REVIEWER = 'REVIEWER'
 
 
 class LoginSchema(BaseModel):
