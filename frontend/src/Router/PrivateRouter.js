@@ -16,7 +16,7 @@ const PrivateRouter = () => {
   const pages = useRoutes(routes);
   !pages && navigate("/");
   return (
-    <div className="relative flex bg-gray-200 min-h-screen">
+    <div className="relative md:flex bg-gray-200 min-h-screen">
       <Navbar />
       {pages}
       {!pages && (

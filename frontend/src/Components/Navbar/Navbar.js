@@ -16,10 +16,15 @@ export default function Navbar() {
       link: "/history",
     },
   ];
-
+  const [drawer, setDrawer] = useState(false);
   return (
-    <div className="">
-      <div className="bg-indigo-900 min-h-screen flex flex-col justify-between text-blue-300 w-64 ">
+    <div className="flex">
+      <div
+        className={
+          (!drawer ? "-translate-x-full " : "") +
+          "bg-indigo-900 min-h-screen z-20 flex flex-col justify-between text-blue-300 w-64 absolute inset-y-0 left-0 transform  md:relative md:translate-x-0 transition duration-200 ease-in-out"
+        }
+      >
         <div className="pt-5 px-4">
           <A href="/dashboard">
             <img
@@ -32,6 +37,7 @@ export default function Navbar() {
             {menus.map((item) => {
               return (
                 <A
+                  key={item.title}
                   href={item.link}
                   className="mt-2 group flex w-full items-center  px-2 py-2 text-base leading-5 font-medium text-blue-300 rounded-md hover:text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-900 transition ease-in-out duration-150"
                 >
@@ -44,7 +50,7 @@ export default function Navbar() {
                     viewBox="0 0 16 16"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M1.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5z"
                     />
                     <path d="M3 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7z" />
@@ -90,17 +96,39 @@ export default function Navbar() {
           </A>
         </div>
       </div>
+      {/* Navbar for small screen*/}
 
-      {/* )} */}
-      {/* <div className="bg-white w-full shadow md-hidden z-10 h-16">
-        <A href="/bla">
+      <div className="flex justify-between md:hidden w-full z-10 flex-shrink-0 h-16 bg-white shadow">
+        <A href="/" className="flex items-center">
           <img
-            className="h-14"
+            className="h-12"
             src="https://user-images.githubusercontent.com/34866653/117874355-7d42eb00-b2be-11eb-82f7-0887aa12be5b.png"
             alt="Assure logo"
           />
         </A>
-      </div> */}
+        <button
+          onClick={() => {
+            setDrawer(!drawer);
+          }}
+          className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:bg-gray-100 focus:text-gray-600 md:hidden"
+        >
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            data-prefix="fas"
+            data-icon="bars"
+            className="text-blue-900 h-6 w-6 svg-inline--fa fa-bars fa-w-14"
+            role="img"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+          >
+            <path
+              fill="currentColor"
+              d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
+            ></path>
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
