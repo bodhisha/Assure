@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { A, navigate } from "hookrouter";
+import { AuthContext } from "../../Context/AuthContext";
 
 export default function Navbar() {
+  const { user } = useContext(AuthContext);
+  const [current_user] = user;
   let menus = [
     {
       title: "Dashboard",
@@ -79,7 +82,7 @@ export default function Navbar() {
               </div>
               <div className="ml-3">
                 <p className="text-sm leading-5 font-medium text-white group-hover:text-blue-100">
-                  bodhi
+                  {current_user.name}
                 </p>
                 <p
                   onClick={() => {
