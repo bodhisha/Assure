@@ -2,23 +2,9 @@ import React, { useState, useContext } from "react";
 import { A, navigate } from "hookrouter";
 import { AuthContext } from "../../Context/AuthContext";
 
-export default function Navbar() {
+export default function Navbar({ menus }) {
   const { user } = useContext(AuthContext);
   const [current_user] = user;
-  let menus = [
-    {
-      title: "Dashboard",
-      link: "/dashboard",
-    },
-    {
-      title: "Profile",
-      link: "/profile",
-    },
-    {
-      title: "History",
-      link: "/history",
-    },
-  ];
   const [drawer, setDrawer] = useState(false);
   return (
     <div className="flex">

@@ -1,5 +1,6 @@
 import { useRoutes, useRedirect, navigate } from "hookrouter";
 import React from "react";
+import CompanyNavbar from "../Components/Navbar/CompanyNavbar";
 import Navbar from "../Components/Navbar/Navbar";
 import UserDashboard from "../Components/UserDashboard/UserDashboard";
 import UserHistory from "../Components/UserDashboard/UserHistory";
@@ -11,13 +12,13 @@ const routes = {
   "/history": () => <UserHistory />,
 };
 
-const PrivateRouter = () => {
+const CompanyRouter = () => {
   useRedirect("/", "/dashboard");
   const pages = useRoutes(routes);
-  !pages && navigate("/");
+  !pages && navigate("/dashboard");
   return (
     <div className="relative md:flex bg-gray-200 min-h-screen">
-      <Navbar />
+      <CompanyNavbar />
       {pages}
       {!pages && (
         <div className="flex justify-center py-16">
@@ -27,4 +28,4 @@ const PrivateRouter = () => {
     </div>
   );
 };
-export default PrivateRouter;
+export default CompanyRouter;
