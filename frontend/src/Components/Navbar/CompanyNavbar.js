@@ -8,7 +8,7 @@ export default function CompanyNavbar() {
       link: "/dashboard",
     },
     {
-      title: "Pending Requests",
+      title: "Pending",
       link: "/pending",
     },
     {

@@ -1,6 +1,6 @@
 import { useRoutes, useRedirect, navigate } from "hookrouter";
 import React from "react";
-import Navbar from "../Components/Navbar/Navbar";
+import UserNavbar from "../Components/Navbar/UserNavbar";
 import UserDashboard from "../Components/UserDashboard/UserDashboard";
 import UserHistory from "../Components/UserDashboard/UserHistory";
 import UserProfile from "../Components/UserDashboard/UserProfile";
@@ -17,7 +17,7 @@ const UserRouter = () => {
   !pages && navigate("/");
   return (
     <div className="relative md:flex bg-gray-200 min-h-screen">
-      <Navbar />
+      <UserNavbar />
       {pages}
       {!pages && (
         <div className="flex justify-center py-16">
