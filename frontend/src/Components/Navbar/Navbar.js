@@ -42,7 +42,6 @@ export default function Navbar({ menus }) {
             width="20"
             height="20"
             fill="currentColor"
-            class="bi bi-clock-history"
             className="text-blue-300 mr-3 text-lg group-hover:text-white group-focus:text-blue-300 transition ease-in-out duration-150"
             viewBox="0 0 16 16"
           >
