@@ -8,3 +8,4 @@ client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 database = client.assure
 
 users_collection = database.get_collection("users_collection")
+insurance_data = database.get_collection("insurance_data")

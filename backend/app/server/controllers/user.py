@@ -1,5 +1,5 @@
 from bson.objectid import ObjectId
-from ..database import users_collection
+from ..database import users_collection, insurance_data
 from fastapi import HTTPException, status
 from .auth import auth_handler
 
@@ -17,6 +17,17 @@ def user_helper(user) -> dict:
         "description": user["description"],
     }
 
+def veh(user) -> dict:
+
+    return {
+        "vehicle_registration_num": user["vehicle_registration_num"],
+        "address": user["address"],
+        "name": user["name"],
+        "engine_num": user["engine_num"],
+        "contact_num": user["contact_num"],
+    }
+
+
 
 # Retrieve all users present in the database
 async def retrieve_users():
@@ -25,6 +36,10 @@ async def retrieve_users():
         users.append(user)
     return users
 
+async def get_vehicle_data(num: str):
+    insurer_detail = await insurance_data.find_one({"insurance_num": num})
+    if insurer_detail:
+        return veh(insurer_detail)
 
 # Add a new user into to the database
 async def add_user(user_data: dict) -> dict:

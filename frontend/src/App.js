@@ -17,7 +17,8 @@ function App() {
 
   return (
     <div>
-      {current_user.role === "CUSTOMER" ? <UserRouter /> : <CompanyRouter />}
+      {current_user &&
+        (current_user.role === "CUSTOMER" ? <UserRouter /> : <CompanyRouter />)}
       <ToastContainer
         position="bottom-right"
         autoClose={3000}
