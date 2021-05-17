@@ -9,6 +9,7 @@ class InsuranceClaimModel(BaseModel):
     address: str = Field(...)
     chassis_num: str = Field(...)
     engine_num: str = Field(...)
+    vehicle_registration_num: str = Field(...)
     vehicle_type: str = Field(...)
     fuel_type: str = Field(...)
     insurance_validity_from: Optional[str]
@@ -32,6 +33,7 @@ class InsuranceClaimModel(BaseModel):
                 "address": "Adress,London",
                 "chassis_num": "563484512sdsf54",
                 "engine_num": "g1gerg2233",
+                "vehicle_registration_num": "KL5d8452",
                 "vehicle_type": "maruthi",
                 "fuel_type": "Petrol",
                 "insurance_validity_from": "12-05-2004",
