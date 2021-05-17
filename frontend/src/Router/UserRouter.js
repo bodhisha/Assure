@@ -4,13 +4,13 @@ import UserNavbar from "../Components/Navbar/UserNavbar";
 import UserDashboard from "../Components/UserDashboard/UserDashboard";
 import UserHistory from "../Components/UserDashboard/UserHistory";
 import UserProfile from "../Components/UserDashboard/UserProfile";
-import VehicleDetailsForm from "../Components/UserDashboard/VehicleDetailsForm";
+import InsuranceDetailsForm from "../Components/UserDashboard/InsuranceDetailsForm";
 
 const routes = {
   "/dashboard": () => <UserDashboard />,
   "/profile": () => <UserProfile />,
   "/history": () => <UserHistory />,
-  "/vehicleDetails": () => <VehicleDetailsForm />,
+  "/claimInsurance": () => <InsuranceDetailsForm />,
 };
 
 const UserRouter = () => {
@@ -18,7 +18,7 @@ const UserRouter = () => {
   const pages = useRoutes(routes);
   !pages && navigate("/");
   return (
-    <div className="relative md:flex bg-gray-200 min-h-screen">
+    <div className="relative md:flex bg-gray-100 min-h-screen">
       <UserNavbar />
       {!pages && <div>bla</div>}
       {pages}
