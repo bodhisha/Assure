@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from .routes.user import router as UserRouter
+from .routes.claim import router as ClaimsRouter
 
 app = FastAPI()
 
@@ -16,6 +17,7 @@ app.add_middleware(
 )
 
 app.include_router(UserRouter, tags=["User"], prefix="/user")
+app.include_router(ClaimsRouter, tags=["Claims"], prefix="/claim")
 
 @app.get("/", tags=["Root"])
 async def read_root():

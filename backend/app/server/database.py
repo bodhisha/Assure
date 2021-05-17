@@ -9,3 +9,4 @@ database = client.assure
 
 users_collection = database.get_collection("users_collection")
 insurance_data = database.get_collection("insurance_data")
+claim_collection = database.get_collection("claim_collection")

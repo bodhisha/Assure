@@ -12,8 +12,7 @@ from ..controllers.user import (
     delete_user,
     retrieve_user,
     update_user,
-    get_current_user,
-    get_vehicle_data
+    get_current_user
 )
 
 from ..controllers.upload import upload_image
@@ -67,13 +66,6 @@ async def update_user_data(updated_user: UpdateUserModel = Body(...), current_us
 async def details_user_data(user_id: str):
     new_user = await retrieve_user(user_id)
     return ResponseModel(new_user, "Got user details successfully.")
-
-@router.get("/insurance_details", response_description="Get user details from the database")
-async def insurance_details(num: str):
-    insurance_details = await get_vehicle_data(num)
-    print("huh", insurance_details)
-    return insurance_details
-
 
 
 @router.get("/current_user", response_description="Get current_user details from the database")
