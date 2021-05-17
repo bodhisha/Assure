@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { navigate } from "hookrouter";
+import { navigate, A } from "hookrouter";
 
 export default function InsuranceDetailsForm() {
   const initForm = {
@@ -26,8 +26,21 @@ export default function InsuranceDetailsForm() {
     police_station: "",
   };
 
-  const [form, setForm] = useState(initForm);
+  const insuranceData = {
+    insurance_num: "",
+    name: "",
+    contact_num: "",
+    address: "",
+    chassis_num: "",
+    engine_num: "",
+    vehicle_registration_num: "",
+    vehicle_type: "",
+    fuel_type: "",
+  };
 
+  const [form, setForm] = useState(initForm);
+  const [insuranceDataForm, setInsuranceDataForm] = useState(insuranceData);
+  const result = { ...form, ...insuranceDataForm };
   const handleChange = (e) => {
     const { value, name } = e.target;
     const FieldValue = { ...form };
@@ -37,9 +50,8 @@ export default function InsuranceDetailsForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submitted");
     axios
-      .post("http://localhost:8000/claim/create_claim", { ...form })
+      .post("http://localhost:8000/claim/create_claim", result)
       .then((resp) => {
         setForm(initForm);
         console.log("Sucess");
@@ -51,6 +63,18 @@ export default function InsuranceDetailsForm() {
       });
   };
 
+  const FetchInsuranceData = useEffect(() => {
+    axios
+      .get(
+        `http://localhost:8000/claim/insurance_details?num=${form.insurance_num}`
+      )
+      .then(({ data }) => {
+        if (data) {
+          setInsuranceDataForm(data);
+        }
+      });
+    // eslint-disable-next-line
+  }, [form.insurance_num]);
   return (
     <div className="w-full m-5">
       <div className=" font-bold text-2xl leading-tight my-5  ">
@@ -259,14 +283,16 @@ export default function InsuranceDetailsForm() {
                     >
                       Insurance Number:
                     </label>
-                    <input
-                      type="text"
-                      name="insurance_num"
-                      id="insurance_num"
-                      value={form.insurance_num}
-                      onChange={handleChange}
-                      className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
-                    />
+                    <div className="flex  items-center border rounded mt-1  focus:outline-none focus:shadow-outline">
+                      <input
+                        type="text"
+                        name="insurance_num"
+                        id="insurance_num"
+                        value={form.insurance_num}
+                        onChange={(e) => [handleChange(e), FetchInsuranceData]}
+                        className=" w-full py-2 px-3 appearance-none text-gray-700 leading-tight"
+                      />
+                    </div>
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -280,7 +306,7 @@ export default function InsuranceDetailsForm() {
                       type="text"
                       name="name"
                       id="name"
-                      value={form.name}
+                      value={insuranceDataForm.name}
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
@@ -297,7 +323,7 @@ export default function InsuranceDetailsForm() {
                       type="text"
                       name="vehicle_registration_num"
                       id="vehicle_registration_num"
-                      value={form.vehicle_registration_num}
+                      value={insuranceDataForm.vehicle_registration_num}
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
@@ -313,7 +339,7 @@ export default function InsuranceDetailsForm() {
                       type="text"
                       name="engine_num"
                       id="engine_num"
-                      value={form.engine_num}
+                      value={insuranceDataForm.engine_num}
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
@@ -329,7 +355,7 @@ export default function InsuranceDetailsForm() {
                       type="text"
                       name="chassis_num"
                       id="chassis_num"
-                      value={form.chassis_num}
+                      value={insuranceDataForm.chassis_num}
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
@@ -346,7 +372,7 @@ export default function InsuranceDetailsForm() {
                       type="text"
                       name="contact_num"
                       id="contact_num"
-                      value={form.contact_num}
+                      value={insuranceDataForm.contact_num}
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
@@ -363,7 +389,7 @@ export default function InsuranceDetailsForm() {
                       type="text"
                       name="vehicle_type"
                       id="vehicle_type"
-                      value={form.vehicle_type}
+                      value={insuranceDataForm.vehicle_type}
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
@@ -380,7 +406,7 @@ export default function InsuranceDetailsForm() {
                       type="text"
                       name="fuel_type"
                       id="fuel_type"
-                      value={form.fuel_type}
+                      value={insuranceDataForm.fuel_type}
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
@@ -396,7 +422,7 @@ export default function InsuranceDetailsForm() {
                       type="text"
                       name="address"
                       id="address"
-                      value={form.address}
+                      value={insuranceDataForm.address}
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />

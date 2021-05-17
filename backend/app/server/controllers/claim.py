@@ -31,10 +31,16 @@ def insurance_helper(insurance) -> dict:
 
     return {
         "vehicle_registration_num": insurance["vehicle_registration_num"],
-        "address": insurance["address"],
+        "insurance_num": insurance["insurance_num"],
         "name": insurance["name"],
-        "engine_num": insurance["engine_num"],
         "contact_num": insurance["contact_num"],
+        "chassis_num": insurance["chassis_num"],
+        "address": insurance["address"],
+        "engine_num": insurance["engine_num"],
+        "vehicle_type": insurance["vehicle_type"],
+        "fuel_type": insurance["fuel_type"],
+        "insurance_validity_from": insurance["vehicle_type"],
+        "insurance_validity_to": insurance["fuel_type"],
     }
 
 
