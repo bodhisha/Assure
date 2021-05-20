@@ -61,6 +61,10 @@ export default function InsuranceDetailsForm() {
         errors[key] = "Enter a valid Insurance Number";
       }
     });
+    if (result["engine_num"] !== result["engine_num_claim"]) {
+      validForm = false;
+      errors["engine_num"] = "Engine Number mismatch";
+    }
     setError(errors);
     return validForm;
   };
