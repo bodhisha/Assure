@@ -38,9 +38,32 @@ export default function InsuranceDetailsForm() {
     fuel_type: "",
   };
 
+  const initError = Object.assign({}, initForm);
+
   const [form, setForm] = useState(initForm);
   const [insuranceDataForm, setInsuranceDataForm] = useState(insuranceData);
   const result = { ...form, ...insuranceDataForm };
+  const [error, setError] = useState(initError);
+
+  const optionalFields = ["FIR_num", "police_station"];
+  const insuranceNumRelatedFields = Object.keys(insuranceData);
+
+  const validateForm = () => {
+    let errors = { ...initError };
+    let validForm = true;
+    Object.keys(result).forEach((key) => {
+      if (result[key] === "" && !optionalFields.includes(key)) {
+        validForm = false;
+        errors[key] = "This field is required";
+      }
+      if (result[key] === "" && insuranceNumRelatedFields.includes(key)) {
+        validForm = false;
+        errors[key] = "Enter a valid Insurance Number";
+      }
+    });
+    setError(errors);
+    return validForm;
+  };
   const handleChange = (e) => {
     const { value, name } = e.target;
     const FieldValue = { ...form };
@@ -50,17 +73,19 @@ export default function InsuranceDetailsForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:8000/claim/create_claim", result)
-      .then((resp) => {
-        setForm(initForm);
-        console.log("Sucess");
-        navigate("/home");
-        window.location.reload();
-      })
-      .catch(({ response }) => {
-        console.log("Err", response);
-      });
+    if (validateForm()) {
+      axios
+        .post("http://localhost:8000/claim/create_claim", result)
+        .then((resp) => {
+          setForm(initForm);
+          console.log("Sucess");
+          navigate("/home");
+          window.location.reload();
+        })
+        .catch(({ response }) => {
+          console.log("Err", response);
+        });
+    }
   };
 
   const FetchInsuranceData = useEffect(() => {
@@ -108,6 +133,9 @@ export default function InsuranceDetailsForm() {
                     onChange={handleChange}
                     className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                   />
+                  <div className="text-xs italic text-red-500">
+                    {error.date}
+                  </div>
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <label
@@ -124,6 +152,9 @@ export default function InsuranceDetailsForm() {
                     onChange={handleChange}
                     className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                   />
+                  <div className="text-xs italic text-red-500">
+                    {error.time}
+                  </div>
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <label
@@ -140,6 +171,9 @@ export default function InsuranceDetailsForm() {
                     onChange={handleChange}
                     className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                   />
+                  <div className="text-xs italic text-red-500">
+                    {error.place}
+                  </div>
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <label
@@ -156,6 +190,9 @@ export default function InsuranceDetailsForm() {
                     onChange={handleChange}
                     className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                   />
+                  <div className="text-xs italic text-red-500">
+                    {error.heading_place}
+                  </div>
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <label
@@ -172,6 +209,9 @@ export default function InsuranceDetailsForm() {
                     onChange={handleChange}
                     className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                   />
+                  <div className="text-xs italic text-red-500">
+                    {error.engine_num_claim}
+                  </div>
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <label
@@ -188,6 +228,9 @@ export default function InsuranceDetailsForm() {
                     onChange={handleChange}
                     className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                   />
+                  <div className="text-xs italic text-red-500">
+                    {error.chassis_num_claim}
+                  </div>
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                   <label
@@ -293,6 +336,9 @@ export default function InsuranceDetailsForm() {
                         className=" w-full py-2 px-3 appearance-none text-gray-700 leading-tight"
                       />
                     </div>
+                    <div className="text-xs italic text-red-500">
+                      {error.insurance_num}
+                    </div>
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -310,6 +356,9 @@ export default function InsuranceDetailsForm() {
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
+                    <div className="text-xs italic text-red-500">
+                      {error.name}
+                    </div>
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -327,6 +376,9 @@ export default function InsuranceDetailsForm() {
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
+                    <div className="text-xs italic text-red-500">
+                      {error.vehicle_registration_num}
+                    </div>
                   </div>
                   <div className="col-span-6 sm:col-span-3">
                     <label
@@ -343,6 +395,9 @@ export default function InsuranceDetailsForm() {
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
+                    <div className="text-xs italic text-red-500">
+                      {error.engine_num}
+                    </div>
                   </div>
                   <div className="col-span-6 sm:col-span-3">
                     <label
@@ -359,6 +414,9 @@ export default function InsuranceDetailsForm() {
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
+                    <div className="text-xs italic text-red-500">
+                      {error.chassis_num}
+                    </div>
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -376,6 +434,9 @@ export default function InsuranceDetailsForm() {
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
+                    <div className="text-xs italic text-red-500">
+                      {error.contact_num}
+                    </div>
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -393,6 +454,9 @@ export default function InsuranceDetailsForm() {
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
+                    <div className="text-xs italic text-red-500">
+                      {error.vehicle_type}
+                    </div>
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -410,6 +474,9 @@ export default function InsuranceDetailsForm() {
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
+                    <div className="text-xs italic text-red-500">
+                      {error.fuel_type}
+                    </div>
                   </div>
                   <div className="col-span-6">
                     <label
@@ -426,6 +493,9 @@ export default function InsuranceDetailsForm() {
                       onChange={handleChange}
                       className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                     />
+                    <div className="text-xs italic text-red-500">
+                      {error.address}
+                    </div>
                   </div>
                 </div>
                 <button className=" bg-blue-800 p-2 px-4 float-right rounded flex items-center gap-x-1 font-semibold hover:bg-blue-700 text-white mt-2">
