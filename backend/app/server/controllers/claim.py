@@ -1,4 +1,4 @@
-from ..database import claim_collection, insurance_data
+from ..database import claim_collection, insurance_data, claim_image_collection
 
 
 def claim_helper(claim) -> dict:
@@ -44,6 +44,16 @@ def insurance_helper(insurance) -> dict:
     }
 
 
+def claim_images_helper(images) -> dict:
+
+    return {
+        "front_view": images["front_view"],
+        "back_view": images["back_view"],
+        "left_view": images["left_view"],
+        "right_view": images["right_view"],  
+    }
+
+
 async def get_insurance_data(num: str):
     insurer_detail = await insurance_data.find_one({"insurance_num": num})
     if insurer_detail:
@@ -54,3 +64,10 @@ async def add_claim(claim_data: dict) -> dict:
     claim = await claim_collection.insert_one(claim_data)
     new_claim = await claim_collection.find_one({"_id": claim.inserted_id})
     return claim_helper(new_claim)
+
+
+async def add_images(images_data: dict) -> dict:
+    claim_images = await claim_image_collection.insert_one(images_data)
+    new_claim_images = await claim_image_collection.find_one({"_id": claim_images.inserted_id})
+    return claim_images_helper(new_claim_images)
+
