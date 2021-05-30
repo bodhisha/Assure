@@ -15,6 +15,7 @@ from ..controllers.user import (
     get_current_user
 )
 
+from ..controllers.deepfake_detect import deepfake_detect
 from ..controllers.upload import upload_image
 from ..controllers.auth import auth_handler
 from ..models.user import (
@@ -38,6 +39,7 @@ async def add_user_data(name: str = Form(...), email: EmailStr = Form(...), role
         "description": description,
         "profile_picture": image_url
     }
+    await deepfake_detect(image_url)
     new_user = await add_user(user)
     return ResponseModel(new_user, "User added successfully.")
 
