@@ -27,4 +27,4 @@ async def deepfake_detect(image_url):
     with torch.no_grad():
         in_tens = img.unsqueeze(0)
         prob = model(in_tens).sigmoid().item()
-        print('probability of being synthetic: {:.2f}%'.format(prob * 100))
+        return "{:.2f}".format(prob * 100)
