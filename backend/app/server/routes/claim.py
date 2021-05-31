@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, status
+from fastapi import APIRouter, Body, status, HTTPException
 from fastapi.encoders import jsonable_encoder
 from ..models.insurance import InsuranceClaimModel
 from fastapi import UploadFile, File
@@ -39,11 +39,18 @@ async def add_claim_images( front_view: UploadFile = File(None), back_view: Uplo
              "left_view": left_view_url,
              "right_view": right_view_url
              }
-    
-    probabilty = await deepfake_detect(front_view_url)
-    if (float(probabilty) > 70):
-        return {"deepfake_probability": probabilty}
+    probabilty_dict = {"front_view": "",
+             "back_view": ""  ,
+             "left_view": "",
+             "right_view": ""
+             }
+    for key, url in images.items():
+        if url != "":
+            probabilty = await deepfake_detect(url)
+            probabilty_dict[key] = probabilty
+    for prob in probabilty_dict.values():
+        if (prob != "" and float(prob) > 70):
+            raise HTTPException(status_code=405, detail={"deepfake_probability": probabilty_dict})
     else:
         claim_images = await add_images(images)
-        return {"deepfake_probability": probabilty, "image_urls": claim_images}
-    
+        return {"deepfake_probability": probabilty_dict, "image_urls": claim_images}    
