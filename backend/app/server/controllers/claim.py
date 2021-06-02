@@ -68,6 +68,7 @@ async def get_insurance_data(num: str):
 async def get_all_claims():
     claims = []
     async for claim in claim_collection.find():
+        claim["user_id"] = str(claim["user_id"])
         del claim["_id"]
         claims.append(claim)
     return claims
