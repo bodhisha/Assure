@@ -29,8 +29,9 @@ async def add_new_claim(claim_details: InsuranceClaimModel = Body(...)):
     return ResponseModel(claim_response, "User Logged in Successfully")
 
 
+
 @router.post("/images",response_description="Claim Images Uploaded Successfully", status_code=status.HTTP_201_CREATED)
-async def add_claim_images( front_view: UploadFile = File(None), back_view: UploadFile = File(None), left_view: UploadFile = File(None), right_view: UploadFile = File(None)):
+async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), back_view: UploadFile = File(None), left_view: UploadFile = File(None), right_view: UploadFile = File(None)):
     front_view_url = upload_image(front_view) if front_view else ""
     back_view_url = upload_image(back_view) if back_view else ""
     left_view_url = upload_image(left_view) if left_view else ""
@@ -57,5 +58,6 @@ async def add_claim_images( front_view: UploadFile = File(None), back_view: Uplo
             if (prob != "" and float(prob) > 70):
                 raise HTTPException(status_code=405, detail={"deepfake_probability": probabilty_dict})
         else:
-            claim_images = await add_images(images)
-            return {"deepfake_probability": probabilty_dict, "image_urls": claim_images}    
+            claim_images = await add_images(images,claim_id)
+            return {"deepfake_probability": probabilty_dict, "image_urls": claim_images}
+                

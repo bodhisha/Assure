@@ -66,8 +66,16 @@ async def add_claim(claim_data: dict) -> dict:
     return claim_helper(new_claim)
 
 
-async def add_images(images_data: dict) -> dict:
-    claim_images = await claim_image_collection.insert_one(images_data)
+async def add_images(images_data: dict, claim_id:str) -> dict:
+    claim_image = {}
+    print(images_data)
+    claim_image["claim_id"] = claim_id
+    claim_image["front_view"] = images_data["front_view"]
+    claim_image["back_view"] = images_data["back_view"]
+    claim_image["left_view"] = images_data["left_view"]
+    claim_image["right_view"] = images_data["right_view"]
+    print(claim_image)
+    claim_images = await claim_image_collection.insert_one(claim_image)
     new_claim_images = await claim_image_collection.find_one({"_id": claim_images.inserted_id})
     return claim_images_helper(new_claim_images)
 

@@ -67,7 +67,6 @@ async def forgery_detect(image_urls):
 	
 	for im in images:
 		start_time = datetime.now()
-		print(type(im))
 		#print('time :',start_time)
 		# resp = urllib.request.urlopen(im)
 		# print(resp)
@@ -75,8 +74,6 @@ async def forgery_detect(image_urls):
 		response = requests.get(im).content
 		im1 = plt.imread(io.BytesIO(response), format='JPG')
 		plt.imshow(im1)
-		print(type(im1))
-		print(im1)
 		sobel = sobel_f(im1)
 		sobel_gray =cv2.cvtColor(sobel, cv2.COLOR_BGR2GRAY)
 		im2_gray =cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
@@ -125,8 +122,7 @@ async def forgery_detect(image_urls):
 			return ("fake")
 		flag = 0
 		#cv2.imshow('image',clone1)
-
-		cv2.imwrite(str(i)+'.png',clone1)    
+  
 		end_time = datetime.now()
 		print('Duration: {}'.format(end_time - start_time))
 		i += 1
