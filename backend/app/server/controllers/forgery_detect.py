@@ -20,8 +20,6 @@ matcher = cv2.DescriptorMatcher_create(cv2.DescriptorMatcher_BRUTEFORCE_HAMMING)
 
 
 def sobel_f(im1):
-	print(im1)
-	print(type(im1))
 	image =im1.astype (int)
 	# derivatives
 	dx=ndimage.sobel(image, 1)
@@ -52,7 +50,6 @@ def show_f(blobs_all):
 	return blob_area
 
 async def forgery_detect(image_urls):
-	print(image_urls)
 	i = 0
 	flag=0
 	images = []
@@ -125,7 +122,6 @@ async def forgery_detect(image_urls):
            
 		
 		if flag == 1:
-			print ("User uploaded a fake image")
 			return ("fake")
 		flag = 0
 		#cv2.imshow('image',clone1)
