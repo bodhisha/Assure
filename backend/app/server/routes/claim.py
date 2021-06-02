@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, status, HTTPException
+from fastapi import APIRouter, Body, status, HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from ..models.insurance import InsuranceClaimModel
 from fastapi import UploadFile, File
@@ -6,10 +6,12 @@ from ..models.user import (ResponseModel)
 from ..controllers.claim import (
     get_insurance_data,
     add_claim,
-    add_images
+    add_images,
+    get_all_claims
 )
 from ..controllers.upload import upload_image
 from ..controllers.deepfake_detect import deepfake_detect
+from ..controllers.auth import auth_handler
 
 
 router = APIRouter()
@@ -22,10 +24,16 @@ async def insurance_details(num: str):
 
 
 @router.post("/create_claim", response_description="Claim Form Submitted Successfully", status_code=status.HTTP_201_CREATED)
-async def add_new_claim(claim_details: InsuranceClaimModel = Body(...)):
+async def add_new_claim(claim_details: InsuranceClaimModel = Body(...), current_user=Depends(auth_handler.auth_wrapper)):
     claim_details = jsonable_encoder(claim_details)
-    claim_response = await add_claim(claim_details)
+    claim_response = await add_claim(current_user, claim_details)
     return ResponseModel(claim_response, "User Logged in Successfully")
+
+# Fetch all Claim Requests (Company)
+@router.get("/all_claim_requests", response_description="All Claim Requests Fetched Sucessfuly!")
+async def claim_details():
+    claim_details = await get_all_claims()
+    return claim_details
 
 
 @router.post("/images",response_description="Claim Images Uploaded Successfully", status_code=status.HTTP_201_CREATED)
