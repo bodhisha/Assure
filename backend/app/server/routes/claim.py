@@ -56,7 +56,7 @@ async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), 
              }
     forgery_result = await forgery_detect(images)
     if (forgery_result == "fake"):
-        raise HTTPException(status_code=405, detail=("fake"))
+        raise HTTPException(status_code=406, detail=("fake"))
     else:
         for key, url in images.items():
             if url != "":
