@@ -10,6 +10,7 @@ from ..controllers.claim import (
 )
 from ..controllers.upload import upload_image
 from ..controllers.deepfake_detect import deepfake_detect
+from ..controllers.forgery_detect import forgery_detect
 
 
 router = APIRouter()
@@ -44,13 +45,17 @@ async def add_claim_images( front_view: UploadFile = File(None), back_view: Uplo
              "left_view": "",
              "right_view": ""
              }
-    for key, url in images.items():
-        if url != "":
-            probabilty = await deepfake_detect(url)
-            probabilty_dict[key] = probabilty
-    for prob in probabilty_dict.values():
-        if (prob != "" and float(prob) > 70):
-            raise HTTPException(status_code=405, detail={"deepfake_probability": probabilty_dict})
+    forgery_result = await forgery_detect(images)
+    if (forgery_result == "fake"):
+        raise HTTPException(status_code=405, detail=("fake"))
     else:
-        claim_images = await add_images(images)
-        return {"deepfake_probability": probabilty_dict, "image_urls": claim_images}    
+        for key, url in images.items():
+            if url != "":
+                probabilty = await deepfake_detect(url)
+                probabilty_dict[key] = probabilty
+        for prob in probabilty_dict.values():
+            if (prob != "" and float(prob) > 70):
+                raise HTTPException(status_code=405, detail={"deepfake_probability": probabilty_dict})
+        else:
+            claim_images = await add_images(images)
+            return {"deepfake_probability": probabilty_dict, "image_urls": claim_images}    
