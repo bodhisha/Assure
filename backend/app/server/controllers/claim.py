@@ -41,10 +41,22 @@ def insurance_helper(insurance) -> dict:
         "engine_num": insurance["engine_num"],
         "vehicle_type": insurance["vehicle_type"],
         "fuel_type": insurance["fuel_type"],
-        "insurance_validity_from": insurance["vehicle_type"],
-        "insurance_validity_to": insurance["fuel_type"],
+        "insurance_validity_from": insurance["insurance_validity_from"],
+        "insurance_validity_to": insurance["insurance_validity_to"],
     }
 
+
+def get_all_claims_helper(insurance,user) -> dict:
+
+    return {
+        "user_id": str(insurance["user_id"]),
+        "insurance_num": insurance["insurance_num"],
+        "name": insurance["name"],
+        "contact_num": insurance["contact_num"],
+        "user_image": user["profile_picture"],
+        "email": user["email"]
+
+    }
 
 def claim_images_helper(images) -> dict:
 
@@ -65,13 +77,13 @@ async def get_insurance_data(num: str):
     if insurer_detail:
         return insurance_helper(insurer_detail)
 
-async def get_all_claims():
+async def get_all_claims(email: str):
+    user = await users_collection.find_one({"email": email})
     claims = []
     async for claim in claim_collection.find():
-        claim["user_id"] = str(claim["user_id"])
-        del claim["_id"]
-        claims.append(claim)
+        claims.append(get_all_claims_helper(claim,user))
     return claims
+
 
 async def add_claim(email: str,claim_data: dict) -> dict:
     user = await users_collection.find_one({"email": email})

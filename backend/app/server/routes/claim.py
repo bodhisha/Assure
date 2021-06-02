@@ -31,8 +31,8 @@ async def add_new_claim(claim_details: InsuranceClaimModel = Body(...), current_
 
 # Fetch all Claim Requests (Company)
 @router.get("/all_claim_requests", response_description="All Claim Requests Fetched Sucessfuly!")
-async def claim_details():
-    claim_details = await get_all_claims()
+async def claim_details(current_user=Depends(auth_handler.auth_wrapper)):
+    claim_details = await get_all_claims(current_user)
     return claim_details
 
 
@@ -43,7 +43,7 @@ async def add_claim_images( front_view: UploadFile = File(None), back_view: Uplo
     left_view_url = upload_image(left_view) if left_view else ""
     right_view_url = upload_image(right_view) if right_view else ""
     images = {"front_view": front_view_url,
-             "back_view": back_view_url  ,
+             "back_view": back_view_url,
              "left_view": left_view_url,
              "right_view": right_view_url
              }
