@@ -12,7 +12,6 @@ flake8==3.8.4
 requests==2.25.1
 scikit-learn
 opencv_python
-Pillow
 torch>=1.2.0
 torchvision
 cycler==0.10.0
