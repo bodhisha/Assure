@@ -1,9 +1,11 @@
-from ..database import claim_collection, insurance_data, claim_image_collection
+from ..database import claim_collection, insurance_data, claim_image_collection, users_collection
+from bson.objectid import ObjectId
 
 
-def claim_helper(claim) -> dict:
+def claim_helper(claim, user) -> dict:
 
     return {
+        "user_id":  str(user["_id"]),
         "claim_id": str(claim["_id"]),
         "insurance_num": claim["insurance_num"],
         "name": claim["name"],
@@ -39,10 +41,22 @@ def insurance_helper(insurance) -> dict:
         "engine_num": insurance["engine_num"],
         "vehicle_type": insurance["vehicle_type"],
         "fuel_type": insurance["fuel_type"],
-        "insurance_validity_from": insurance["vehicle_type"],
-        "insurance_validity_to": insurance["fuel_type"],
+        "insurance_validity_from": insurance["insurance_validity_from"],
+        "insurance_validity_to": insurance["insurance_validity_to"],
     }
 
+
+def get_all_claims_helper(insurance,user) -> dict:
+
+    return {
+        "user_id": str(insurance["user_id"]),
+        "insurance_num": insurance["insurance_num"],
+        "name": insurance["name"],
+        "contact_num": insurance["contact_num"],
+        "user_image": user["profile_picture"],
+        "email": user["email"]
+
+    }
 
 def claim_images_helper(images) -> dict:
 
@@ -53,18 +67,31 @@ def claim_images_helper(images) -> dict:
         "right_view": images["right_view"],  
     }
 
+async def initialize_claim(user_id: ObjectId, claim_data: dict):
+    claim_data["user_id"] = user_id
+    return claim_data
+
 
 async def get_insurance_data(num: str):
     insurer_detail = await insurance_data.find_one({"insurance_num": num})
     if insurer_detail:
         return insurance_helper(insurer_detail)
 
+async def get_all_claims():
+    claims = []
+    async for claim in claim_collection.find():
+        user = await users_collection.find_one({"_id": claim["user_id"]})
+        claims.append(get_all_claims_helper(claim,user))
+    return claims
 
-async def add_claim(claim_data: dict) -> dict:
-    claim = await claim_collection.insert_one(claim_data)
+
+async def add_claim(email: str,claim_data: dict) -> dict:
+    user = await users_collection.find_one({"email": email})
+    user_claim_data = await initialize_claim(user["_id"], claim_data)
+    claim = await claim_collection.insert_one(user_claim_data)
     new_claim = await claim_collection.find_one({"_id": claim.inserted_id})
-    return claim_helper(new_claim)
-
+    return claim_helper(new_claim, user)
+ 
 
 async def add_images(images_data: dict, claim_id:str) -> dict:
     claim_image = {}

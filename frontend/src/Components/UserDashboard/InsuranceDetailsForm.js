@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { navigate, A } from "hookrouter";
+import { AuthContext } from "../../Context/AuthContext";
 
 export default function InsuranceDetailsForm() {
+  const { token } = useContext(AuthContext);
+  const [access] = token;
+
   const initForm = {
     insurance_num: "",
     name: "",
@@ -79,7 +83,11 @@ export default function InsuranceDetailsForm() {
     e.preventDefault();
     if (validateForm()) {
       axios
-        .post("http://localhost:8000/claim/create_claim", result)
+        .post("http://localhost:8000/claim/create_claim", result, {
+          headers: {
+            Authorization: "Bearer " + access,
+          },
+        })
         .then((resp) => {
           setForm(initForm);
           console.log("Sucess");

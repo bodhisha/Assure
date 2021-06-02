@@ -213,7 +213,7 @@ export default function UserDashboard() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="w-full sm:w-1/3 my-2 flex items-center bg-blue-800 hover:bg-indigo-800 text-white font-bold py-2 px-4 sm:px-3 rounded focus:outline-none focus:shadow-outline"
+            className="w-full sm:w-1/3 md:w-1/4 my-2 flex items-center bg-blue-800 hover:bg-indigo-800 text-white font-bold py-2 px-4 sm:px-3 rounded focus:outline-none focus:shadow-outline"
           >
             <svg
               className="h-5 w-5 text-white transition ease-in-out duration-150 mr-1"
