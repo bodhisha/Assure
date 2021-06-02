@@ -77,10 +77,10 @@ async def get_insurance_data(num: str):
     if insurer_detail:
         return insurance_helper(insurer_detail)
 
-async def get_all_claims(email: str):
-    user = await users_collection.find_one({"email": email})
+async def get_all_claims():
     claims = []
     async for claim in claim_collection.find():
+        user = await users_collection.find_one({"_id": claim["user_id"]})
         claims.append(get_all_claims_helper(claim,user))
     return claims
 

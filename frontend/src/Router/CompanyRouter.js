@@ -2,12 +2,12 @@ import { useRoutes, useRedirect, navigate } from "hookrouter";
 import React from "react";
 import Pending from "../Components/CompanyDashboard/Pending";
 import CompanyNavbar from "../Components/Navbar/CompanyNavbar";
-import UserDashboard from "../Components/UserDashboard/UserDashboard";
+import CompanyDashboard from "../Components/CompanyDashboard/CompanyDashboard";
 import UserHistory from "../Components/UserDashboard/UserHistory";
 import UserProfile from "../Components/UserDashboard/UserProfile";
 
 const routes = {
-  "/dashboard": () => <UserDashboard />,
+  "/dashboard": () => <CompanyDashboard />,
   "/profile": () => <UserProfile />,
   "/history": () => <UserHistory />,
   "/pending": () => <Pending />,

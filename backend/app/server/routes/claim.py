@@ -32,7 +32,7 @@ async def add_new_claim(claim_details: InsuranceClaimModel = Body(...), current_
 # Fetch all Claim Requests (Company)
 @router.get("/all_claim_requests", response_description="All Claim Requests Fetched Sucessfuly!")
 async def claim_details(current_user=Depends(auth_handler.auth_wrapper)):
-    claim_details = await get_all_claims(current_user)
+    claim_details = await get_all_claims()
     return claim_details
 
 
