@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, Field
 
@@ -49,3 +50,12 @@ class InsuranceClaimModel(BaseModel):
                 "police_station": "Kottayam Police Station"
             }
         }
+
+class Status(str, Enum):
+    APPROVE = 'APPROVE'
+    REJECT = 'REJECT'
+class ClaimReportReviewModel(BaseModel):
+    claim_id: str = Field(...)
+    comment: Optional[str]
+    estimated_cost: float = Field(...)
+    status: Status = Field(...)

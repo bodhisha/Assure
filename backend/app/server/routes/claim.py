@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Body, status, HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
-from ..models.insurance import InsuranceClaimModel
+from ..models.insurance import ClaimReportReviewModel, InsuranceClaimModel
 from fastapi import UploadFile, File
 from ..models.user import (ResponseModel)
 from ..controllers.claim import (
     get_insurance_data,
     add_claim,
     add_images,
-    get_all_claims
+    get_all_claims,
+    add_review
 )
 from ..controllers.upload import upload_image
 from ..controllers.deepfake_detect import deepfake_detect
@@ -70,4 +71,11 @@ async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), 
         else:
             claim_images = await add_images(images,claim_id)
             return {"deepfake_probability": probabilty_dict, "image_urls": claim_images}
+        
+
+@router.post("/report_review", response_description="Claim Report Reviewed Successfully", status_code=status.HTTP_201_CREATED)
+async def add_report_review(review_details: ClaimReportReviewModel = Body(...)):
+    review_details = jsonable_encoder(review_details)
+    review_response = await add_review( review_details)
+    return review_response
                 

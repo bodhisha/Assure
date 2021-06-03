@@ -1,3 +1,4 @@
+from matplotlib.pyplot import cla
 from ..database import claim_collection, insurance_data, claim_image_collection, users_collection
 from bson.objectid import ObjectId
 
@@ -105,4 +106,10 @@ async def add_images(images_data: dict, claim_id:str) -> dict:
     claim_images = await claim_image_collection.insert_one(claim_image)
     new_claim_images = await claim_image_collection.find_one({"_id": claim_images.inserted_id})
     return claim_images_helper(new_claim_images)
+
+async def add_review(review_data: dict) -> dict:
+    review_update = await claim_collection.update_one({"_id":ObjectId(review_data["claim_id"])}, {"$set": {"review_details": review_data}})
+    if review_update:
+        return "Review Updated Successfullt"
+    return False
 
