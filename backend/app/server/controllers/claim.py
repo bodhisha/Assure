@@ -1,4 +1,3 @@
-from matplotlib.pyplot import cla
 from ..database import claim_collection, insurance_data, claim_image_collection, users_collection
 from bson.objectid import ObjectId
 

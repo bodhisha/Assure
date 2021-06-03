@@ -1,16 +1,46 @@
 import React, { useState } from "react";
+import { navigate } from "hookrouter";
+import axios from "axios";
+import { Loading } from "../Common/Loader";
 import ClaimReport from "../UserDashboard/ClaimReport";
 
 export default function ClaimRequestDetails({ id }) {
-  console.log("hey", id);
-  const [form, setForm] = useState("");
+  const OPTIONS = [{ text: "APPROVE" }, { text: "REJECT" }];
+  const [loading, setLoading] = useState(false);
+
+  const initForm = {
+    claim_id: id,
+    comment: "",
+    estimated_cost: "",
+    status: OPTIONS[0].text,
+  };
+
+  const [form, setForm] = useState(initForm);
   const handleChange = (e) => {
     const { value, name } = e.target;
     const FieldValue = { ...form };
     FieldValue[name] = value;
     setForm(FieldValue);
   };
-  const OPTIONS = [{ text: "Approve" }, { text: "Reject" }];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    axios
+      .post("http://localhost:8000/claim/report_review", { ...form })
+      .then((resp) => {
+        setForm(initForm);
+        // toast.success(JSON.stringify(resp.data.message));
+        navigate("/home");
+        setLoading(false);
+      })
+      .catch(({ response }) => {
+        if (response) {
+          console.log(response.data);
+        }
+        setLoading(false);
+      });
+  };
 
   return (
     <div className="m-5">
@@ -18,66 +48,54 @@ export default function ClaimRequestDetails({ id }) {
       <div className="flex items-center gap-x-2 sm:col-span-2 text-lg my-2 mx-2 leading-6 font-bold text-blue-900">
         Claim Report Review{" "}
       </div>
-      <form className="bg-white rounded-lg p-2 max-w-3xl ">
-        <div className="flex items-center m-2 justify-between">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white rounded-lg p-2 w-full grid  grid-cols-1 sm:grid-cols-2 "
+      >
+        <div className=" items-center col-span-2 m-2 justify-between">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="cost"
-          >
-            Estimated Cost
-          </label>
-          <input
-            name="cost"
-            value=""
-            type="text"
-            onChange={handleChange}
-            className=" border rounded w-1/3 py-2 px-3 text-gray-700 bg-gray-50 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Enter the estimated cost for the insurance"
-          />
-        </div>
-        <div className="flex items-center  m-2 justify-between">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="cost"
+            htmlFor="comment"
           >
             Comments/ Details
           </label>
-          <input
-            name="cost"
-            value=""
+          <textarea
+            name="comment"
+            value={form.comment}
             type="text"
             onChange={handleChange}
-            className=" border rounded w-1/3 py-2 px-3 text-gray-700 bg-gray-50 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Enter the estimated cost for the insurance"
+            className=" border rounded w-full py-2 px-3 text-gray-700 bg-gray-50 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter review details and comments"
           />
         </div>
-        <div className="flex items-center m-2 justify-between">
+        <div className="col-span-2 sm:col-span-1 items-center m-2 justify-between">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="cost"
           >
-            Estimated Cost
+            Estimated Cost for Claim
           </label>
           <input
-            name="cost"
-            value=""
+            name="estimated_cost"
+            value={form.estimated_cost}
             type="text"
             onChange={handleChange}
-            className=" border rounded w-1/3 py-2 px-3 text-gray-700 bg-gray-50 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Enter the estimated cost "
+            className=" border rounded w-full sm:w-2/3 py-2 px-3 text-gray-700 bg-gray-50 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter the estimated cost"
           />
         </div>
-        <div className="relative">
+
+        <div className="col-span-2 sm:col-span-1 items-center m-2 justify-between">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="cost"
+            htmlFor="status"
           >
-            Estimated Cost
+            Status of Claim
           </label>
           <select
-            className=""
-            name="role"
-            value={form.role}
+            className="border rounded w-full sm:w-2/3  py-2 px-3 text-gray-700 bg-gray-50 leading-tight focus:outline-none focus:shadow-outline"
+            name="status"
+            value={form.status}
             onChange={handleChange}
           >
             {OPTIONS.map((item) => (
@@ -96,6 +114,20 @@ export default function ClaimRequestDetails({ id }) {
             </svg>
           </div>
         </div>
+        <button className="bg-blue-800 p-2 col-span-2 sm:col-end-3 my-2 sm:col-span-1 w-full sm:w-2/3 justify-self-end  px-4 float-right rounded flex items-center gap-x-1 font-semibold hover:bg-blue-700 text-white mt-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            fill="currentColor"
+            className="bi bi-check-circle"
+            viewBox="0 0 16 16"
+          >
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+          </svg>
+          Update Claim Status
+        </button>
       </form>
     </div>
   );
