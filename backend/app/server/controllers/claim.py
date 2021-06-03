@@ -150,9 +150,10 @@ async def retrieve_claim(claim_id: str):
     if(claim_details):
         claim_images = await claim_image_collection.find_one({"_id": claim_id})
         if(claim_images):
-            return (claim_helper(claim_details,user=False),claim_images_helper(claim_images))
+            return ({"claim_details": claim_helper(claim_details,user=False), "claim_images":claim_images_helper(claim_images)})
+
         else:
-            return (claim_helper(claim_details,user=False))
+            return ({"claim_details":claim_helper(claim_details,user=False)})
             
 
 
