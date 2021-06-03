@@ -4,30 +4,55 @@ from fastapi.exceptions import HTTPException
 
 
 def claim_helper(claim, user) -> dict:
-
-    return {
-        "user_id":  str(user["_id"]),
-        "claim_id": str(claim["_id"]),
-        "insurance_num": claim["insurance_num"],
-        "name": claim["name"],
-        "contact_num": claim["contact_num"],
-        "address": claim["address"],
-        "chassis_num": claim["chassis_num"],
-        "engine_num": claim["engine_num"],
-        "vehicle_type": claim["vehicle_type"],
-        "fuel_type": claim["fuel_type"],
-        "insurance_validity_from": claim["insurance_validity_from"],
-        "insurance_validity_to": claim["insurance_validity_to"],
-        "date": claim["date"],
-        "time": claim["time"],
-        "place": claim["place"],
-        "heading_place": claim["heading_place"],
-        "engine_num_claim": claim["engine_num_claim"],
-        "chassis_num_claim": claim["chassis_num_claim"],
-        "isReported": claim["isReported"],
-        "FIR_num": claim["FIR_num"],
-        "police_station": claim["police_station"],
-    }
+    if (user):
+        return {
+            "user_id":  str(user["_id"]),
+            "claim_id": str(claim["_id"]),
+            "insurance_num": claim["insurance_num"],
+            "name": claim["name"],
+            "contact_num": claim["contact_num"],
+            "address": claim["address"],
+            "chassis_num": claim["chassis_num"],
+            "engine_num": claim["engine_num"],
+            "vehicle_type": claim["vehicle_type"],
+            "fuel_type": claim["fuel_type"],
+            "insurance_validity_from": claim["insurance_validity_from"],
+            "insurance_validity_to": claim["insurance_validity_to"],
+            "date": claim["date"],
+            "time": claim["time"],
+            "place": claim["place"],
+            "heading_place": claim["heading_place"],
+            "engine_num_claim": claim["engine_num_claim"],
+            "chassis_num_claim": claim["chassis_num_claim"],
+            "isReported": claim["isReported"],
+            "FIR_num": claim["FIR_num"],
+            "police_station": claim["police_station"],
+            "vehicle_registration_num": claim["vehicle_registration_num"]
+        }
+    else:
+        return {
+            "claim_id": str(claim["_id"]),
+            "insurance_num": claim["insurance_num"],
+            "name": claim["name"],
+            "contact_num": claim["contact_num"],
+            "address": claim["address"],
+            "chassis_num": claim["chassis_num"],
+            "engine_num": claim["engine_num"],
+            "vehicle_type": claim["vehicle_type"],
+            "fuel_type": claim["fuel_type"],
+            "insurance_validity_from": claim["insurance_validity_from"],
+            "insurance_validity_to": claim["insurance_validity_to"],
+            "date": claim["date"],
+            "time": claim["time"],
+            "place": claim["place"],
+            "heading_place": claim["heading_place"],
+            "engine_num_claim": claim["engine_num_claim"],
+            "chassis_num_claim": claim["chassis_num_claim"],
+            "isReported": claim["isReported"],
+            "FIR_num": claim["FIR_num"],
+            "police_station": claim["police_station"],
+            "vehicle_registration_num": claim["vehicle_registration_num"]
+        }
 
 
 def insurance_helper(insurance) -> dict:
@@ -96,29 +121,39 @@ async def add_claim(email: str,claim_data: dict) -> dict:
  
 
 async def add_images(images_data: dict, claim_id:str) -> dict:
-    claim_image = {}
-    claim_image["_id"] = claim_id
-    claim_image["front_view"] = images_data["front_view"]
-    claim_image["back_view"] = images_data["back_view"]
-    claim_image["left_view"] = images_data["left_view"]
-    claim_image["right_view"] = images_data["right_view"]
-    images = await claim_image_collection.find_one({"_id": claim_id})
-    if (images):
-        raise HTTPException(status_code=404, detail=("Claim is already being processed"))
-    else:
-        claim_images = await claim_image_collection.insert_one(claim_image)
-        new_claim_images = await claim_image_collection.find_one({"_id": claim_id})
-        return claim_images_helper(new_claim_images)
+    try:
+        claim_details = await claim_collection.find_one({"_id": ObjectId(claim_id)})
+    except:
+        raise HTTPException(status_code=404, detail=("Invalid claim ID"))
+    if(claim_details):
+        claim_image = {}
+        claim_image["_id"] = claim_id
+        claim_image["front_view"] = images_data["front_view"]
+        claim_image["back_view"] = images_data["back_view"]
+        claim_image["left_view"] = images_data["left_view"]
+        claim_image["right_view"] = images_data["right_view"]
+        images = await claim_image_collection.find_one({"_id": claim_id})
+        if (images):
+            raise HTTPException(status_code=404, detail=("Claim is already being processed"))
+        else:
+            claim_images = await claim_image_collection.insert_one(claim_image)
+            new_claim_images = await claim_image_collection.find_one({"_id": claim_id})
+            return claim_images_helper(new_claim_images)
 
 
 
 async def retrieve_claim(claim_id: str):
     try:
         claim_details = await claim_collection.find_one({"_id": ObjectId(claim_id)})
-        claim_images = await claim_image_collection.find_one({"_id": claim_id})
-        return (claim_helper(claim_details),claim_images_helper(claim_images))
     except:
         raise HTTPException(status_code=404, detail=("Invalid claim ID"))
+    if(claim_details):
+        claim_images = await claim_image_collection.find_one({"_id": claim_id})
+        if(claim_images):
+            return (claim_helper(claim_details,user=False),claim_images_helper(claim_images))
+        else:
+            return (claim_helper(claim_details,user=False))
+            
 
 
 async def add_review(review_data: dict) -> dict:
