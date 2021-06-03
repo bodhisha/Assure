@@ -47,13 +47,14 @@ def insurance_helper(insurance) -> dict:
     }
 
 
-def get_all_claims_helper(insurance,user) -> dict:
+def get_all_claims_helper(claim,user) -> dict:
 
     return {
-        "user_id": str(insurance["user_id"]),
-        "insurance_num": insurance["insurance_num"],
-        "name": insurance["name"],
-        "contact_num": insurance["contact_num"],
+        "claim_id": str(claim["_id"]),
+        "user_id": str(claim["user_id"]),
+        "insurance_num": claim["insurance_num"],
+        "name": claim["name"],
+        "contact_num": claim["contact_num"],
         "user_image": user["profile_picture"],
         "email": user["email"]
 
