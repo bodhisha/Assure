@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { navigate } from "hookrouter";
 import axios from "axios";
 import { Loading } from "../Common/Loader";
@@ -41,10 +41,9 @@ export default function ClaimRequestDetails({ id }) {
         setLoading(false);
       });
   };
-
   return (
     <div className="m-5">
-      <ClaimReport />
+      <ClaimReport id={id} />
       <div className="flex items-center gap-x-2 sm:col-span-2 text-lg my-2 mx-2 leading-6 font-bold text-blue-900">
         Claim Report Review{" "}
       </div>

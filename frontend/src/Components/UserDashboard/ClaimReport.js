@@ -1,6 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Loading } from "../Common/Loader";
+import { A } from "hookrouter";
 
-export default function ClaimReport() {
+export default function ClaimReport({ id }) {
+  const [loading, setLoading] = useState(false);
+  const [claimDetails, setClaimDetails] = useState([]);
+  console.log(id);
+
+  useEffect(() => {
+    setLoading(true);
+    console.log("hey");
+    axios
+      .get(`http://localhost:8000/claim/details?claim_id=${id}`)
+      .then((res) => {
+        console.log(res);
+        setClaimDetails(res.data);
+        setLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  console.log(claimDetails);
   return (
     <div>
       <div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -35,16 +56,20 @@ export default function ClaimReport() {
               <dt class="text-sm font-medium text-gray-500">
                 Name of the Insured
               </dt>
-              <dd class="mt-1 text-sm text-gray-900">Margot Foster</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails?.claim_details?.name}
+              </dd>
             </div>
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">Contact Number</dt>
-              <dd class="mt-1 text-sm text-gray-900">Backend Developer</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails?.claim_details?.contact_num}
+              </dd>
             </div>
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">Email address</dt>
               <dd class="mt-1 text-sm text-gray-900">
-                margotfoster@example.com
+                {claimDetails?.claim_details?.email}
               </dd>
             </div>
             <div class="sm:col-span-1">
@@ -81,39 +106,52 @@ export default function ClaimReport() {
               <dt class="text-sm font-medium text-gray-500">
                 Insurance Number
               </dt>
-              <dd class="mt-1 text-sm text-gray-900">Margot Foster</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails.claim_details.insurance_num}
+              </dd>
             </div>
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">Engine Number</dt>
-              <dd class="mt-1 text-sm text-gray-900">Backend Developer</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails.claim_details.engine_num}
+              </dd>
             </div>
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">Chasis Number</dt>
               <dd class="mt-1 text-sm text-gray-900">
-                margotfoster@example.com
+                {claimDetails.claim_details.chassis_num}
               </dd>
             </div>
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">
                 Vehicle Registration Number
               </dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails.claim_details.vehicle_registration_num}
+              </dd>
             </div>
 
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">Vehicle Type</dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails.claim_details.vehicle_type}
+              </dd>
             </div>
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">Fuel Type</dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails.claim_details.fuel_type}
+              </dd>
             </div>
 
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">
                 Insurance Validity
               </dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails.claim_details.insurance_validity_from} -
+                {claimDetails.claim_details.insurance_validity_to}
+              </dd>
             </div>
           </dl>
         </div>
@@ -143,46 +181,67 @@ export default function ClaimReport() {
               <dt class="text-sm font-medium text-gray-500">
                 Date of Accident
               </dt>
-              <dd class="mt-1 text-sm text-gray-900">Margot Foster</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails.claim_details.date}
+              </dd>
             </div>
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">
                 Time of Accident
               </dt>
-              <dd class="mt-1 text-sm text-gray-900">Backend Developer</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails.claim_details.time}
+              </dd>
             </div>
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">
                 Exact Place Where incident occurred
               </dt>
               <dd class="mt-1 text-sm text-gray-900">
-                margotfoster@example.com
+                {claimDetails.claim_details.place}
               </dd>
             </div>
             <div class="sm:col-span-1">
               <dt class="text-sm font-medium text-gray-500">
                 Place to which the vehicle was heading before incident{" "}
               </dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
+              <dd class="mt-1 text-sm text-gray-900">
+                {claimDetails.claim_details.heading_place}
+              </dd>
             </div>
+            {claimDetails.claim_details.isReported ? (
+              <div>
+                <div class="sm:col-span-1">
+                  <dt class="text-sm font-medium text-gray-500">
+                    Reported to Police
+                  </dt>
+                  <dd class="mt-1 text-sm text-gray-900">Yes</dd>
+                </div>
+                <div class="sm:col-span-1">
+                  <dt class="text-sm font-medium text-gray-500">
+                    Name & Address of the Police Station
+                  </dt>
+                  <dd class="mt-1 text-sm text-gray-900">
+                    {claimDetails.claim_details.police_station}
+                  </dd>
+                </div>
+                <div class="sm:col-span-1">
+                  <dt class="text-sm font-medium text-gray-500">FIR No</dt>
+                  <dd class="mt-1 text-sm text-gray-900">
+                    {claimDetails.claim_details.FIR_num}
+                  </dd>
+                </div>
+              </div>
+            ) : (
+              <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500">
+                  Reported to Police
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 ">No</dd>
+              </div>
+            )}
 
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500">
-                Reported to Police
-              </dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
-            </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500">
-                Name & Address of the Police Station
-              </dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
-            </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500">FIR No</dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
-            </div>
-            <div class="sm:col-span-2">
+            {/* <div class="sm:col-span-2">
               <dt class="text-sm font-medium text-gray-500">About</dt>
               <dd class="mt-1 text-sm text-gray-900">
                 Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
@@ -191,7 +250,7 @@ export default function ClaimReport() {
                 proident. Irure nostrud pariatur mollit ad adipisicing
                 reprehenderit deserunt qui eu.
               </dd>
-            </div>
+            </div> */}
           </dl>
         </div>
 
@@ -210,36 +269,10 @@ export default function ClaimReport() {
               <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
             </svg>
             <div>Damage Analysis </div>
+            <div>
+              <img src={claimDetails.claim_images.front_view}></img>
+            </div>
           </div>
-          <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500">
-                Name of the Insured
-              </dt>
-              <dd class="mt-1 text-sm text-gray-900">Margot Foster</dd>
-            </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500">
-                Insurance Number
-              </dt>
-              <dd class="mt-1 text-sm text-gray-900">Backend Developer</dd>
-            </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500">Email address</dt>
-              <dd class="mt-1 text-sm text-gray-900">
-                margotfoster@example.com
-              </dd>
-            </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500">Contact Number</dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
-            </div>
-
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500">Contact Number</dt>
-              <dd class="mt-1 text-sm text-gray-900">$120,000</dd>
-            </div>
-          </dl>
         </div>
       </div>
     </div>
