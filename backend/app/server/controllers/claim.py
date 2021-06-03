@@ -46,13 +46,14 @@ def insurance_helper(insurance) -> dict:
     }
 
 
-def get_all_claims_helper(insurance,user) -> dict:
+def get_all_claims_helper(claim,user) -> dict:
 
     return {
-        "user_id": str(insurance["user_id"]),
-        "insurance_num": insurance["insurance_num"],
-        "name": insurance["name"],
-        "contact_num": insurance["contact_num"],
+        "claim_id": str(claim["_id"]),
+        "user_id": str(claim["user_id"]),
+        "insurance_num": claim["insurance_num"],
+        "name": claim["name"],
+        "contact_num": claim["contact_num"],
         "user_image": user["profile_picture"],
         "email": user["email"]
 
@@ -105,4 +106,10 @@ async def add_images(images_data: dict, claim_id:str) -> dict:
     claim_images = await claim_image_collection.insert_one(claim_image)
     new_claim_images = await claim_image_collection.find_one({"_id": claim_images.inserted_id})
     return claim_images_helper(new_claim_images)
+
+async def add_review(review_data: dict) -> dict:
+    review_update = await claim_collection.update_one({"_id":ObjectId(review_data["claim_id"])}, {"$set": {"review_details": review_data}})
+    if review_update:
+        return "Review Updated Successfullt"
+    return False
 

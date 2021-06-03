@@ -117,7 +117,7 @@ export default function CompanyDashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <A
-                            href={`/claims/${claim.user_id}`}
+                            href={`/claims/${claim.claim_id}`}
                             className="text-blue-600 hover:text-blue-900"
                           >
                             View
