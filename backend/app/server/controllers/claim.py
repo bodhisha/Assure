@@ -27,7 +27,8 @@ def claim_helper(claim, user) -> dict:
             "isReported": claim["isReported"],
             "FIR_num": claim["FIR_num"],
             "police_station": claim["police_station"],
-            "vehicle_registration_num": claim["vehicle_registration_num"]
+            "vehicle_registration_num": claim["vehicle_registration_num"],
+            "review_details": claim["review_details"]
         }
     else:
         return {
@@ -51,7 +52,7 @@ def claim_helper(claim, user) -> dict:
             "isReported": claim["isReported"],
             "FIR_num": claim["FIR_num"],
             "police_station": claim["police_station"],
-            "vehicle_registration_num": claim["vehicle_registration_num"]
+            "vehicle_registration_num": claim["vehicle_registration_num"],
         }
 
 
@@ -150,9 +151,10 @@ async def retrieve_claim(claim_id: str):
     if(claim_details):
         claim_images = await claim_image_collection.find_one({"_id": claim_id})
         if(claim_images):
-            return (claim_helper(claim_details,user=False),claim_images_helper(claim_images))
+            return ({"claim_details": claim_helper(claim_details,user=False), "claim_images":claim_images_helper(claim_images)})
+
         else:
-            return (claim_helper(claim_details,user=False))
+            return ({"claim_details":claim_helper(claim_details,user=False)})
             
 
 
@@ -161,4 +163,3 @@ async def add_review(review_data: dict) -> dict:
     if review_update:
         return "Review Updated Successfullt"
     return False
-
