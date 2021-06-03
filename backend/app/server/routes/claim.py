@@ -54,17 +54,19 @@ async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), 
              "left_view": "",
              "right_view": ""
              }
-    forgery_result = await forgery_detect(images)
-    if (forgery_result == "fake"):
-        raise HTTPException(status_code=406, detail=("fake"))
+    
+    for key, url in images.items():
+        if url != "":
+            probabilty = await deepfake_detect(url)
+            probabilty_dict[key] = probabilty
+    for prob in probabilty_dict.values():
+        if (prob != "" and float(prob) > 70):
+            raise HTTPException(status_code=405, detail={"deepfake_probability": probabilty_dict})
+    
     else:
-        for key, url in images.items():
-            if url != "":
-                probabilty = await deepfake_detect(url)
-                probabilty_dict[key] = probabilty
-        for prob in probabilty_dict.values():
-            if (prob != "" and float(prob) > 70):
-                raise HTTPException(status_code=405, detail={"deepfake_probability": probabilty_dict})
+        forgery_result = await forgery_detect(images)
+        if (forgery_result == "fake"):
+            raise HTTPException(status_code=406, detail=("fake"))
         else:
             claim_images = await add_images(images,claim_id)
             return {"deepfake_probability": probabilty_dict, "image_urls": claim_images}
