@@ -72,7 +72,7 @@ async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), 
             raise HTTPException(status_code=406, detail=("fake"))
         else:
             claim_images = await add_images(images,claim_id)
-            return claim_images
+            return {"deepfake_probability": probabilty, "image_urls": claim_images}
 
 @router.get("/details", response_description="Get claim details from the database")
 async def details_claim_data(claim_id: str):
