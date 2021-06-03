@@ -1,3 +1,4 @@
+from bson.objectid import ObjectId
 from fastapi import APIRouter, Body, status, HTTPException
 from fastapi.encoders import jsonable_encoder
 from ..models.insurance import InsuranceClaimModel
@@ -6,7 +7,8 @@ from ..models.user import (ResponseModel)
 from ..controllers.claim import (
     get_insurance_data,
     add_claim,
-    add_images
+    add_images,
+    retrieve_claim
 )
 from ..controllers.upload import upload_image
 from ..controllers.deepfake_detect import deepfake_detect
@@ -59,5 +61,11 @@ async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), 
                 raise HTTPException(status_code=405, detail={"deepfake_probability": probabilty_dict})
         else:
             claim_images = await add_images(images,claim_id)
-            return {"deepfake_probability": probabilty_dict, "image_urls": claim_images}
+            return claim_images
+            
+
+@router.get("/details", response_description="Get claim details from the database")
+async def details_claim_data(claim_id: str):
+    new_claim = await retrieve_claim(claim_id)
+    return new_claim
                 

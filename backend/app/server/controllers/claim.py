@@ -1,4 +1,6 @@
+from fastapi.exceptions import HTTPException
 from ..database import claim_collection, insurance_data, claim_image_collection
+from bson.objectid import ObjectId
 
 
 def claim_helper(claim) -> dict:
@@ -68,14 +70,26 @@ async def add_claim(claim_data: dict) -> dict:
 
 async def add_images(images_data: dict, claim_id:str) -> dict:
     claim_image = {}
-    print(images_data)
-    claim_image["claim_id"] = claim_id
+    claim_image["_id"] = claim_id
     claim_image["front_view"] = images_data["front_view"]
     claim_image["back_view"] = images_data["back_view"]
     claim_image["left_view"] = images_data["left_view"]
     claim_image["right_view"] = images_data["right_view"]
-    print(claim_image)
-    claim_images = await claim_image_collection.insert_one(claim_image)
-    new_claim_images = await claim_image_collection.find_one({"_id": claim_images.inserted_id})
-    return claim_images_helper(new_claim_images)
+    images = await claim_image_collection.find_one({"_id": claim_id})
+    if (images):
+        raise HTTPException(status_code=404, detail=("Claim is already being processed"))
+    else:
+        claim_images = await claim_image_collection.insert_one(claim_image)
+        new_claim_images = await claim_image_collection.find_one({"_id": claim_id})
+        return claim_images_helper(new_claim_images)
 
+    
+
+
+async def retrieve_claim(claim_id: str):
+    try:
+        claim_details = await claim_collection.find_one({"_id": ObjectId(claim_id)})
+        claim_images = await claim_image_collection.find_one({"_id": claim_id})
+        return (claim_helper(claim_details),claim_images_helper(claim_images))
+    except:
+        raise HTTPException(status_code=404, detail=("Invalid claim ID"))
