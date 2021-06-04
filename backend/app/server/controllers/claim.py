@@ -28,7 +28,7 @@ def claim_helper(claim, user) -> dict:
             "FIR_num": claim["FIR_num"],
             "police_station": claim["police_station"],
             "vehicle_registration_num": claim["vehicle_registration_num"],
-            "review_details": claim["review_details"]
+            
         }
     else:
         return {
@@ -53,6 +53,7 @@ def claim_helper(claim, user) -> dict:
             "FIR_num": claim["FIR_num"],
             "police_station": claim["police_station"],
             "vehicle_registration_num": claim["vehicle_registration_num"],
+            
         }
 
 
@@ -163,3 +164,10 @@ async def add_review(review_data: dict) -> dict:
     if review_update:
         return "Review Updated Successfullt"
     return False
+
+async def retrieve_pending_claim():
+    claims = []
+    claims_review = []
+    async for claim in claim_collection.find({"review_details":{'$exists': False}}):
+        claims.append(claim_helper(claim,user=False))    
+    return claims

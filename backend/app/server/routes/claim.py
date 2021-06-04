@@ -10,7 +10,8 @@ from ..controllers.claim import (
     add_images,
     get_all_claims,
     add_review,
-    retrieve_claim
+    retrieve_claim,
+    retrieve_pending_claim
 )
 from ..controllers.upload import upload_image
 from ..controllers.deepfake_detect import deepfake_detect
@@ -86,3 +87,7 @@ async def add_report_review(review_details: ClaimReportReviewModel = Body(...)):
     review_response = await add_review( review_details)
     return review_response
                 
+@router.get("/pending_claim_review", response_description="Get claim details for review from the database")
+async def pending_claim_details():
+    new_claim = await retrieve_pending_claim()
+    return new_claim
