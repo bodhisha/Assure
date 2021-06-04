@@ -55,7 +55,7 @@ def insurance_helper(insurance) -> dict:
 
 def get_all_claims_helper(claim,user) -> dict:
 
-    return {
+    data =  {
         "claim_id": str(claim["_id"]),
         "user_id": str(claim["user_id"]),
         "insurance_num": claim["insurance_num"],
@@ -63,8 +63,12 @@ def get_all_claims_helper(claim,user) -> dict:
         "contact_num": claim["contact_num"],
         "user_image": user["profile_picture"],
         "email": user["email"]
-
     }
+    if ("review_details" in claim.keys()):
+        data["status"] = claim["review_details"]["status"]
+    else:
+        data["status"] = "PENDING"
+    return data
 
 def claim_images_helper(images) -> dict:
 
@@ -146,7 +150,7 @@ async def add_review(review_data: dict) -> dict:
 
 async def retrieve_pending_claim():
     claims = []
-    claims_review = []
     async for claim in claim_collection.find({"review_details":{'$exists': False}}):
-        claims.append(claim_helper(claim,user=False))    
+        user = await users_collection.find_one({"_id": claim["user_id"]})
+        claims.append(get_all_claims_helper(claim,user))    
     return claims
