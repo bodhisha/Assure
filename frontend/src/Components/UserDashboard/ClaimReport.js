@@ -3,7 +3,7 @@ import axios from "axios";
 import { Loading } from "../Common/Loader";
 import { A } from "hookrouter";
 
-export default function ClaimReport({ id }) {
+export default function ClaimReport({ id, _reviewPending }) {
   const [loading, setLoading] = useState(false);
   const [claimDetails, setClaimDetails] = useState({});
   console.log(id);
@@ -20,7 +20,9 @@ export default function ClaimReport({ id }) {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
+  {
+    claimDetails?.claim_details?.review_details && _reviewPending();
+  }
   return (
     <div>
       {Object.keys(claimDetails).length > 0 && (
