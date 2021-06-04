@@ -1,6 +1,6 @@
 import { useRoutes, useRedirect, navigate } from "hookrouter";
 import React from "react";
-import Pending from "../Components/CompanyDashboard/Pending";
+import PendingClaims from "../Components/CompanyDashboard/PendingClaims";
 import CompanyNavbar from "../Components/Navbar/CompanyNavbar";
 import CompanyDashboard from "../Components/CompanyDashboard/CompanyDashboard";
 import ClaimRequestDetails from "../Components/CompanyDashboard/ClaimRequestDetails";
@@ -11,7 +11,7 @@ const routes = {
   "/dashboard": () => <CompanyDashboard />,
   "/profile": () => <UserProfile />,
   "/history": () => <UserHistory />,
-  "/pending": () => <Pending />,
+  "/claims/pending": () => <PendingClaims />,
   "/claims/:id": ({ id }) => <ClaimRequestDetails id={id} />,
 };
 

@@ -9,7 +9,7 @@ export default function CompanyNavbar() {
     },
     {
       title: "Pending",
-      link: "/pending",
+      link: "/claims/pending",
     },
     {
       title: "History",

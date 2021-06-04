@@ -20,9 +20,9 @@ export default function ClaimReport({ id, _reviewPending }) {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-  {
-    claimDetails?.claim_details?.review_details && _reviewPending();
-  }
+
+  claimDetails?.claim_details?.review_details && _reviewPending();
+
   return (
     <div>
       {Object.keys(claimDetails).length > 0 && (

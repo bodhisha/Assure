@@ -3,9 +3,8 @@ import { navigate } from "hookrouter";
 import axios from "axios";
 import { Loading } from "../Common/Loader";
 import ClaimReport from "../UserDashboard/ClaimReport";
-
+import { OPTIONS } from "../../Common/constants";
 export default function ClaimRequestDetails({ id }) {
-  const OPTIONS = [{ text: "APPROVE" }, { text: "REJECT" }];
   const [loading, setLoading] = useState(false);
 
   const initForm = {
@@ -14,7 +13,6 @@ export default function ClaimRequestDetails({ id }) {
     estimated_cost: "",
     status: OPTIONS[0].text,
   };
-
   const [form, setForm] = useState(initForm);
   const [reviewPending, setReviewPending] = useState(true);
   const handleChange = (e) => {

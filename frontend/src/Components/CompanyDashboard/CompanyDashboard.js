@@ -102,17 +102,22 @@ export default function CompanyDashboard() {
                           <div className="text-sm text-gray-900">
                             {claim.insurance_num}
                           </div>
-                          <div className="text-sm text-gray-500">
-                            Optimization
-                          </div>
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {claim.contact_num}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            Active
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full " ${
+                              claim.status === "APPROVE"
+                                ? "bg-green-100 text-green-800"
+                                : claim.status === "REJECT"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-blue-100 text-blue-800"
+                            } `}
+                          >
+                            {claim.status}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
