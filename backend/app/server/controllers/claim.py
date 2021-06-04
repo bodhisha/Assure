@@ -4,57 +4,36 @@ from fastapi.exceptions import HTTPException
 
 
 def claim_helper(claim, user) -> dict:
+    data = {
+            "claim_id": str(claim["_id"]),
+            "insurance_num": claim["insurance_num"],
+            "name": claim["name"],
+            "contact_num": claim["contact_num"],
+            "address": claim["address"],
+            "chassis_num": claim["chassis_num"],
+            "engine_num": claim["engine_num"],
+            "vehicle_type": claim["vehicle_type"],
+            "fuel_type": claim["fuel_type"],
+            "insurance_validity_from": claim["insurance_validity_from"],
+            "insurance_validity_to": claim["insurance_validity_to"],
+            "date": claim["date"],
+            "time": claim["time"],
+            "place": claim["place"],
+            "heading_place": claim["heading_place"],
+            "engine_num_claim": claim["engine_num_claim"],
+            "chassis_num_claim": claim["chassis_num_claim"],
+            "isReported": claim["isReported"],
+            "FIR_num": claim["FIR_num"],
+            "police_station": claim["police_station"],
+            "vehicle_registration_num": claim["vehicle_registration_num"],
+            }
+    if ("review_details" in claim.keys()):
+        data["review_details"] = claim["review_details"]
     if (user):
-        return {
-            "user_id":  str(user["_id"]),
-            "claim_id": str(claim["_id"]),
-            "insurance_num": claim["insurance_num"],
-            "name": claim["name"],
-            "contact_num": claim["contact_num"],
-            "address": claim["address"],
-            "chassis_num": claim["chassis_num"],
-            "engine_num": claim["engine_num"],
-            "vehicle_type": claim["vehicle_type"],
-            "fuel_type": claim["fuel_type"],
-            "insurance_validity_from": claim["insurance_validity_from"],
-            "insurance_validity_to": claim["insurance_validity_to"],
-            "date": claim["date"],
-            "time": claim["time"],
-            "place": claim["place"],
-            "heading_place": claim["heading_place"],
-            "engine_num_claim": claim["engine_num_claim"],
-            "chassis_num_claim": claim["chassis_num_claim"],
-            "isReported": claim["isReported"],
-            "FIR_num": claim["FIR_num"],
-            "police_station": claim["police_station"],
-            "vehicle_registration_num": claim["vehicle_registration_num"],
-            
-        }
+        data["user_id"] = str(user["_id"])
+        return data
     else:
-        return {
-            "claim_id": str(claim["_id"]),
-            "insurance_num": claim["insurance_num"],
-            "name": claim["name"],
-            "contact_num": claim["contact_num"],
-            "address": claim["address"],
-            "chassis_num": claim["chassis_num"],
-            "engine_num": claim["engine_num"],
-            "vehicle_type": claim["vehicle_type"],
-            "fuel_type": claim["fuel_type"],
-            "insurance_validity_from": claim["insurance_validity_from"],
-            "insurance_validity_to": claim["insurance_validity_to"],
-            "date": claim["date"],
-            "time": claim["time"],
-            "place": claim["place"],
-            "heading_place": claim["heading_place"],
-            "engine_num_claim": claim["engine_num_claim"],
-            "chassis_num_claim": claim["chassis_num_claim"],
-            "isReported": claim["isReported"],
-            "FIR_num": claim["FIR_num"],
-            "police_station": claim["police_station"],
-            "vehicle_registration_num": claim["vehicle_registration_num"],
-            
-        }
+        return data
 
 
 def insurance_helper(insurance) -> dict:
