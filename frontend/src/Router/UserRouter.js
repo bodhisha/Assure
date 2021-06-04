@@ -5,12 +5,14 @@ import UserDashboard from "../Components/UserDashboard/UserDashboard";
 import UserHistory from "../Components/UserDashboard/UserHistory";
 import UserProfile from "../Components/UserDashboard/UserProfile";
 import InsuranceDetailsForm from "../Components/UserDashboard/InsuranceDetailsForm";
+import ClaimRequestDetails from "../Components/CompanyDashboard/ClaimRequestDetails";
 
 const routes = {
   "/dashboard": () => <UserDashboard />,
   "/profile": () => <UserProfile />,
   "/history": () => <UserHistory />,
   "/claimInsurance": () => <InsuranceDetailsForm />,
+  "/claims/:id": ({ id }) => <ClaimRequestDetails id={id} />,
 };
 
 const UserRouter = () => {

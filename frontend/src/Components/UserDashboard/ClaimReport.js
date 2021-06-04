@@ -6,6 +6,7 @@ import { A } from "hookrouter";
 export default function ClaimReport({ id, _reviewPending }) {
   const [loading, setLoading] = useState(false);
   const [claimDetails, setClaimDetails] = useState({});
+  const [detectResult, setDetectResult] = useState({});
   console.log(id);
 
   useEffect(() => {
@@ -20,6 +21,24 @@ export default function ClaimReport({ id, _reviewPending }) {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    setLoading(true);
+    console.log("hey");
+    axios
+      .get(`http://localhost:8000/claim/detection_results?claim_id=${id}`)
+      .then((res) => {
+        console.log(res.data);
+        setDetectResult(res.data);
+        setLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+  console.log("type", typeof detectResult);
+
+  // Object.entries(detectResult.front_view).forEach(([key, value]) => {
+  //   console.log("front", key, "=>", value);
+  // });
 
   claimDetails?.claim_details?.review_details && _reviewPending();
 
@@ -280,11 +299,30 @@ export default function ClaimReport({ id, _reviewPending }) {
                   </svg>
                   Front View
                 </div>
-                <img
-                  className="w-4/12 mx-auto"
-                  alt="front_view"
-                  src={claimDetails.claim_images.front_view}
-                ></img>
+                <div className="flex gap-x-5 justify-center items-center">
+                  <img
+                    className="w-4/12 "
+                    alt="front_view"
+                    src={claimDetails.claim_images.front_view}
+                  ></img>
+
+                  {Object.keys(detectResult).length > 0 && (
+                    <div className="">
+                      {Object.entries(detectResult.front_view).map(
+                        ([key, value]) => {
+                          return (
+                            <div className="flex gap-x-3">
+                              <p className="font-semibold text-blue-900">
+                                {key}:
+                              </p>
+                              <p className="text-blue-900 font-bold">{value}</p>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
             {claimDetails.claim_images && claimDetails.claim_images.back_view && (
@@ -303,11 +341,30 @@ export default function ClaimReport({ id, _reviewPending }) {
                   <div>Back View</div>
                 </div>
 
-                <img
-                  className="w-4/12 mx-auto"
-                  alt="front_view"
-                  src={claimDetails.claim_images.back_view}
-                ></img>
+                <div className="flex gap-x-5 justify-center items-center">
+                  <img
+                    className="w-4/12 "
+                    alt="front_view"
+                    src={claimDetails.claim_images.back_view}
+                  ></img>
+
+                  {Object.keys(detectResult).length > 0 && (
+                    <div className="">
+                      {Object.entries(detectResult.back_view).map(
+                        ([key, value]) => {
+                          return (
+                            <div className="flex gap-x-3">
+                              <p className="font-semibold text-blue-900">
+                                {key}:
+                              </p>
+                              <p className="text-blue-900 font-bold">{value}</p>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
             {claimDetails.claim_images && claimDetails.claim_images.back_view && (
@@ -325,11 +382,30 @@ export default function ClaimReport({ id, _reviewPending }) {
                   </svg>
                   <div>Left View</div>
                 </div>
-                <img
-                  className="w-4/12 mx-auto"
-                  alt="front_view"
-                  src={claimDetails.claim_images.left_view}
-                ></img>
+                <div className="flex gap-x-5 justify-center items-center">
+                  <img
+                    className="w-4/12 "
+                    alt="front_view"
+                    src={claimDetails.claim_images.left_view}
+                  ></img>
+
+                  {Object.keys(detectResult).length > 0 && (
+                    <div className="">
+                      {Object.entries(detectResult.left_view).map(
+                        ([key, value]) => {
+                          return (
+                            <div className="flex gap-x-3">
+                              <p className="font-semibold text-blue-900">
+                                {key}:
+                              </p>
+                              <p className="text-blue-900 font-bold">{value}</p>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
             {claimDetails.claim_images && claimDetails.claim_images.back_view && (
@@ -347,11 +423,30 @@ export default function ClaimReport({ id, _reviewPending }) {
                   </svg>
                   <div>Right View</div>
                 </div>
-                <img
-                  className="w-4/12 mx-auto"
-                  alt="front_view"
-                  src={claimDetails.claim_images.right_view}
-                ></img>
+                <div className="flex gap-x-5 justify-center items-center">
+                  <img
+                    className="w-4/12 "
+                    alt="right_view"
+                    src={claimDetails.claim_images.right_view}
+                  ></img>
+
+                  {Object.keys(detectResult).length > 0 && (
+                    <div className="">
+                      {Object.entries(detectResult.right_view).map(
+                        ([key, value]) => {
+                          return (
+                            <div className="flex gap-x-3">
+                              <p className="font-semibold text-blue-900">
+                                {key}:
+                              </p>
+                              <p className="text-blue-900 font-bold">{value}</p>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
