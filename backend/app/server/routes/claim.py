@@ -81,11 +81,7 @@ async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), 
             raise HTTPException(status_code=406, detail=("fake"))
         else:
             claim_images = await add_images(images,claim_id)
-            for key, url in images.items():
-                if url != "":
-                    damage_detection = await damage_detect(url,claim_id)
-                    damage_detection_result[key] = damage_detection
-        return {"deepfake_probability": probabilty,"damage_detection": damage_detection, "image_urls": claim_images}
+        return {"deepfake_probability": probabilty, "image_urls": claim_images}
     
             
 
@@ -105,3 +101,8 @@ async def add_report_review(review_details: ClaimReportReviewModel = Body(...)):
 async def pending_claim_details():
     new_claim = await retrieve_pending_claim()
     return new_claim
+
+@router.get("/detection_results", response_description="Get detection results for particular claim")
+async def get_detection_details(claim_id: str):
+    damage_detection = await damage_detect(claim_id)
+    return damage_detection
