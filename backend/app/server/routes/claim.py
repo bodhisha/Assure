@@ -11,12 +11,13 @@ from ..controllers.claim import (
     get_all_claims,
     add_review,
     retrieve_claim,
-    retrieve_pending_claim
+    retrieve_pending_claim,
 )
 from ..controllers.upload import upload_image
 from ..controllers.deepfake_detect import deepfake_detect
 from ..controllers.auth import auth_handler
 from ..controllers.forgery_detect import forgery_detect
+from ..controllers.damage_detect import damage_detect
 
 
 router = APIRouter()
@@ -58,7 +59,14 @@ async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), 
              "left_view": "",
              "right_view": ""
              }
-    
+
+
+    damage_detection_result = {"front_view": "",
+             "back_view": ""  ,
+             "left_view": "",
+             "right_view": ""
+             }
+
     for key, url in images.items():
         if url != "":
             probabilty = await deepfake_detect(url)
@@ -73,7 +81,9 @@ async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), 
             raise HTTPException(status_code=406, detail=("fake"))
         else:
             claim_images = await add_images(images,claim_id)
-            return {"deepfake_probability": probabilty, "image_urls": claim_images}
+        return {"deepfake_probability": probabilty, "image_urls": claim_images}
+    
+            
 
 @router.get("/details", response_description="Get claim details from the database")
 async def details_claim_data(claim_id: str):
@@ -91,3 +101,8 @@ async def add_report_review(review_details: ClaimReportReviewModel = Body(...)):
 async def pending_claim_details():
     new_claim = await retrieve_pending_claim()
     return new_claim
+
+@router.get("/detection_results", response_description="Get detection results for particular claim")
+async def get_detection_details(claim_id: str):
+    damage_detection = await damage_detect(claim_id)
+    return damage_detection
