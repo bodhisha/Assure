@@ -26,38 +26,39 @@ async def damage_detect(claim_id):
        
     result = {}
     for key,value in image_urls_items:
-        resp = 'data:image/{};base64,'.format("JPG") + base64.b64encode(requests.get(value).content).decode('ascii')
-        payload = "{\"rows\": [{\"image\":\"" + resp + "\"}]}"
-        headers = {
-            'Content-Type': "application/json",
-            'Authorization': "Bearer {}".format(token),
-            }
+        if value != "":
+            resp = 'data:image/{};base64,'.format("JPG") + base64.b64encode(requests.get(value).content).decode('ascii')
+            payload = "{\"rows\": [{\"image\":\"" + resp + "\"}]}"
+            headers = {
+                'Content-Type': "application/json",
+                'Authorization': "Bearer {}".format(token),
+                }
 
-        response = requests.request("POST", url, data=payload, headers=headers)
-        response=response.json()
-        x=response["rows"][0]["class"].values()
+            response = requests.request("POST", url, data=payload, headers=headers)
+            response=response.json()
+            x=response["rows"][0]["class"].values()
 
-        x=list(x)
-        n=list()
-        m=list()
+            x=list(x)
+            n=list()
+            m=list()
 
-        k=0
-        for i in x:
-            if(i * 100>1):
-                #print("{:.2f}".format(i * 100))
-                m.append("{:.2f}".format(i * 100))
-                n.append(k)
-            k=k+1
+            k=0
+            for i in x:
+                if(i * 100>1):
+                    #print("{:.2f}".format(i * 100))
+                    m.append("{:.2f}".format(i * 100))
+                    n.append(k)
+                k=k+1
 
 
-        y=response["rows"][0]["class"].keys()
-        y=list(y)
-        k=0
-        damage_result = {}   
-        for v in n:
-            damage_result[y[v]] = m[k]+"%"
-            k=k+1
-        result[key] = damage_result
+            y=response["rows"][0]["class"].keys()
+            y=list(y)
+            k=0
+            damage_result = {}   
+            for v in n:
+                damage_result[y[v]] = m[k]+"%"
+                k=k+1
+            result[key] = damage_result
     detection_results = await claim_collection.update_one({"_id":ObjectId(claim_id)}, {"$set": {"detection_details": result}})
     if detection_results:
         return (result)
