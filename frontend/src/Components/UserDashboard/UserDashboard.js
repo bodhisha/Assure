@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { A } from "hookrouter";
+import { A, navigate } from "hookrouter";
 import { Loading } from "../Common/Loader";
 import axios from "axios";
 
@@ -53,6 +53,7 @@ export default function UserDashboard() {
         )
         .then((resp) => {
           setForm(resp);
+          navigate(`/claims/${claim_id}`);
           setLoading(false);
         })
         .catch((error) => {

@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { navigate } from "hookrouter";
 import axios from "axios";
 import { Loading } from "../Common/Loader";
 import ClaimReport from "../UserDashboard/ClaimReport";
 import { OPTIONS } from "../../Common/constants";
+import { AuthContext } from "../../Context/AuthContext";
+
 export default function ClaimRequestDetails({ id }) {
   const [loading, setLoading] = useState(false);
-
+  const { user } = useContext(AuthContext);
+  const [current_user] = user;
   const initForm = {
     claim_id: id,
     comment: "",
@@ -43,7 +46,7 @@ export default function ClaimRequestDetails({ id }) {
   return (
     <div className="m-5">
       <ClaimReport id={id} _reviewPending={() => setReviewPending(false)} />
-      {reviewPending && (
+      {reviewPending && current_user.role === "REVIEWER" && (
         <div>
           <div className="flex items-center gap-x-2 sm:col-span-2 text-lg my-2 mx-2 leading-6 font-bold text-blue-900">
             Claim Report Review{" "}
