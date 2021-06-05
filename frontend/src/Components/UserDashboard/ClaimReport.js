@@ -367,7 +367,7 @@ export default function ClaimReport({ id, _reviewPending }) {
                 </div>
               </div>
             )}
-            {claimDetails.claim_images && claimDetails.claim_images.back_view && (
+            {claimDetails.claim_images && claimDetails.claim_images.left_view && (
               <div>
                 <div className="text-xl flex gap-x-2 items-center text-blue-900 font-semibold mx-5">
                   <svg
@@ -408,7 +408,7 @@ export default function ClaimReport({ id, _reviewPending }) {
                 </div>
               </div>
             )}
-            {claimDetails.claim_images && claimDetails.claim_images.back_view && (
+            {claimDetails.claim_images && claimDetails.claim_images.right_view && (
               <div>
                 <div className="text-xl flex gap-x-2 items-center text-blue-900 font-semibold mx-5">
                   <svg
