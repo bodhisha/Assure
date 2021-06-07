@@ -160,9 +160,32 @@ async def retrieve_pending_claim():
 
 async def get_recent_claim(user: dict) -> dict:
     user_data = await users_collection.find_one({"email": user})
-    claims_by_user = claim_collection.find({"user_id": user_data["_id"] }).sort([("$natural",-1)]).limit(1)
-    async for claim in claims_by_user:
+    recent_claim_by_user = claim_collection.find({"user_id": user_data["_id"] }).sort([("$natural",-1)]).limit(1)
+    async for claim in recent_claim_by_user:
         if ("detection_details" in claim.keys()):
             raise HTTPException(status_code=404, detail=("No pending claim for user"))
         else:
             return {"claim_id" : str(claim["_id"])}
+
+
+async def get_claim_status(user: dict) -> dict:
+    user_data = await users_collection.find_one({"email": user})
+    recent_claim_by_user = claim_collection.find({"user_id": user_data["_id"] }).sort([("$natural",-1)]).limit(1)
+    async for claim in recent_claim_by_user:
+        if ("detection_details" not in claim.keys()):
+            return {"status":"upload_pending", "detail": "Upload damaged vehicle images to continue the claim process"}
+        elif ("review_details" not in claim.keys()):
+            return {"status": "reviewing","detail":"Claim under review"}
+        elif ("review_details" in claim.keys()):
+            return {"status": "processed","detail":"Claim request has been processed", "cost": claim["review_details"]["estimated_cost"], "review_status":claim["review_details"]["status"]}
+        else:
+            return {"status": "Blaa Unknown"}
+
+
+async def get_claims_by_user(user: dict) -> dict:
+    user_data = await users_collection.find_one({"email": user})
+    claims=[]
+    claims_by_user = claim_collection.find({"user_id": user_data["_id"] })
+    async for claim in claims_by_user:
+        claims.append(get_all_claims_helper(claim,user_data))
+    return  claims

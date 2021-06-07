@@ -12,7 +12,9 @@ from ..controllers.claim import (
     add_review,
     retrieve_claim,
     retrieve_pending_claim,
-    get_recent_claim
+    get_recent_claim,
+    get_claim_status,
+    get_claims_by_user
 )
 from ..controllers.upload import upload_image
 from ..controllers.deepfake_detect import deepfake_detect
@@ -106,3 +108,13 @@ async def get_detection_details(claim_id: str):
 async def recent_claim(current_user=Depends(auth_handler.auth_wrapper)):
     claim_details = await get_recent_claim(current_user)
     return claim_details
+
+@router.get("/status", response_description="Status of Claim fetched successfully")
+async def claim_status(current_user=Depends(auth_handler.auth_wrapper)):
+    claim_status = await get_claim_status(current_user)
+    return claim_status
+
+@router.get("/user_claims", response_description="Claims by user fetched successfully")
+async def claims_by_user(current_user=Depends(auth_handler.auth_wrapper)):
+    claims_by_user = await get_claims_by_user(current_user)
+    return claims_by_user
