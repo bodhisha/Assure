@@ -12,10 +12,6 @@ export default function CompanyNavbar() {
       link: "/claims/pending",
     },
     {
-      title: "History",
-      link: "/history",
-    },
-    {
       title: "Profile",
       link: "/profile",
     },

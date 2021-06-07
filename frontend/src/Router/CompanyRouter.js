@@ -10,7 +10,6 @@ import UserProfile from "../Components/UserDashboard/UserProfile";
 const routes = {
   "/dashboard": () => <CompanyDashboard />,
   "/profile": () => <UserProfile />,
-  "/history": () => <UserHistory />,
   "/claims/pending": () => <PendingClaims />,
   "/claims/:id": ({ id }) => <ClaimRequestDetails id={id} />,
 };

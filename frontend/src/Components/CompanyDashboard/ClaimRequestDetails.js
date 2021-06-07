@@ -46,7 +46,7 @@ export default function ClaimRequestDetails({ id }) {
     }
   };
   return (
-    <div className="m-5">
+    <div className="w-full m-5">
       {loading ? (
         <Loading />
       ) : (

@@ -6,7 +6,6 @@ export default function ClaimReport({ id, _reviewPending }) {
   const [loading, setLoading] = useState(false);
   const [claimDetails, setClaimDetails] = useState({});
   const [detectResult, setDetectResult] = useState({});
-  console.log(id);
 
   useEffect(() => {
     if (!loading) {
@@ -28,7 +27,6 @@ export default function ClaimReport({ id, _reviewPending }) {
       axios
         .get(`http://localhost:8000/claim/detection_results?claim_id=${id}`)
         .then((res) => {
-          console.log(res.data);
           setDetectResult(res.data);
           setLoading(false);
         });
