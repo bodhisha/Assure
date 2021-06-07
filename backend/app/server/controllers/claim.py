@@ -162,7 +162,7 @@ async def get_recent_claim(user: dict) -> dict:
     user_data = await users_collection.find_one({"email": user})
     claims_by_user = claim_collection.find({"user_id": user_data["_id"] }).sort([("$natural",-1)]).limit(1)
     async for claim in claims_by_user:
-        if ("review_details" in claim.keys()):
+        if ("detection_details" in claim.keys()):
             raise HTTPException(status_code=404, detail=("No pending claim for user"))
         else:
             return {"claim_id" : str(claim["_id"])}

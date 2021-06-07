@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { A, navigate } from "hookrouter";
 import { Loading } from "../Common/Loader";
 import axios from "axios";
+import { AuthContext } from "../../Context/AuthContext";
 
 export default function UserDashboard() {
   const initImages = {
@@ -10,22 +11,41 @@ export default function UserDashboard() {
     left_view: "",
     right_view: "",
   };
-
+  const { token } = useContext(AuthContext);
+  const [access] = token;
   const [files, setFiles] = useState(initImages);
   const [fakeProbability, setFakeProbability] = useState(initImages);
   const [form, setForm] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [claim_id, setClaim_id] = useState("");
   const [isForgery, setIsForgery] = useState(false);
+  const [claimId, setClaimId] = useState("");
+  const [err, setErr] = useState("");
   const handleFileUpload = (e) => {
     const { name } = e.target;
     const file = e.target.files[0];
     setFiles({ ...files, [name]: file });
   };
-  const handleChange = (e) => {
-    const { value } = e.target;
-    setClaim_id(value);
-  };
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get("http://localhost:8000/claim/recent_claim", {
+        headers: {
+          Authorization: "Bearer " + access,
+        },
+      })
+      .then((res) => {
+        setClaimId(res.data.claim_id);
+        setLoading(false);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          setErr(error.response.data.detail);
+        }
+        setLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const imageFormData = new FormData();
   if (files) {
@@ -35,14 +55,13 @@ export default function UserDashboard() {
     imageFormData.append("right_view", files.right_view);
   }
 
-  console.log(imageFormData);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!loading) {
       setLoading(true);
       axios
         .post(
-          `http://localhost:8000/claim/images?claim_id=${claim_id}`,
+          `http://localhost:8000/claim/images?claim_id=${claimId}`,
           imageFormData,
           {
             headers: {
@@ -53,7 +72,7 @@ export default function UserDashboard() {
         )
         .then((resp) => {
           setForm(resp);
-          navigate(`/claims/${claim_id}`);
+          navigate(`/claims/${claimId}`);
           setLoading(false);
         })
         .catch((error) => {
@@ -132,11 +151,16 @@ export default function UserDashboard() {
               aria-label="claim id"
               name="claim_id"
               placeholder="Enter the Claim ID"
-              value={claim_id}
-              onChange={handleChange}
+              value={claimId}
+              // onChange={handleChange}
               type="text"
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700  leading-tight focus:outline-none focus:shadow-outline"
             />
+            {err && (
+              <div className="text-red-500 font-semibold">
+                Complete Claim Insurance Form First
+              </div>
+            )}
           </div>
           <div className="mb-4">
             <label
