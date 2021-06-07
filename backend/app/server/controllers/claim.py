@@ -1,3 +1,5 @@
+from motor import frameworks
+from motor.frameworks.asyncio import pymongo_class_wrapper
 from ..database import claim_collection, insurance_data, claim_image_collection, users_collection
 from bson.objectid import ObjectId
 from fastapi.exceptions import HTTPException
@@ -154,3 +156,13 @@ async def retrieve_pending_claim():
         user = await users_collection.find_one({"_id": claim["user_id"]})
         claims.append(get_all_claims_helper(claim,user))    
     return claims
+
+
+async def get_recent_claim(user: dict) -> dict:
+    user_data = await users_collection.find_one({"email": user})
+    claims_by_user = claim_collection.find({"user_id": user_data["_id"] }).sort([("$natural",-1)]).limit(1)
+    async for claim in claims_by_user:
+        if ("review_details" in claim.keys()):
+            raise HTTPException(status_code=404, detail=("No pending claim for user"))
+        else:
+            return {"claim_id" : str(claim["_id"])}

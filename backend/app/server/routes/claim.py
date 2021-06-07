@@ -12,6 +12,7 @@ from ..controllers.claim import (
     add_review,
     retrieve_claim,
     retrieve_pending_claim,
+    get_recent_claim
 )
 from ..controllers.upload import upload_image
 from ..controllers.deepfake_detect import deepfake_detect
@@ -61,12 +62,6 @@ async def add_claim_images( claim_id: str, front_view: UploadFile = File(None), 
              }
 
 
-    damage_detection_result = {"front_view": "",
-             "back_view": ""  ,
-             "left_view": "",
-             "right_view": ""
-             }
-
     for key, url in images.items():
         if url != "":
             probabilty = await deepfake_detect(url)
@@ -106,3 +101,8 @@ async def pending_claim_details():
 async def get_detection_details(claim_id: str):
     damage_detection = await damage_detect(claim_id)
     return damage_detection
+
+@router.get("/recent_claim", response_description="Recent claim by user fetched successfully")
+async def recent_claim(current_user=Depends(auth_handler.auth_wrapper)):
+    claim_details = await get_recent_claim(current_user)
+    return claim_details
