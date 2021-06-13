@@ -473,6 +473,32 @@ export default function ClaimReport({ id, _reviewPending }) {
                       </div>
                     </div>
                   )}
+                {claimDetails && claimDetails.claim_details.video && (
+                  <div>
+                    <div className="text-xl flex gap-x-2 items-center text-blue-900 font-semibold mx-5">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="currentColor"
+                        class="bi bi-arrow-right-circle-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
+                      </svg>
+                      <div>Video Preview</div>
+                    </div>
+                    <div className="flex gap-x-5 justify-center items-center">
+                      <video width="320" height="240" controls>
+                        <source
+                          src={claimDetails.claim_details.video}
+                          type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

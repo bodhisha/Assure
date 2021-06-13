@@ -31,6 +31,8 @@ def claim_helper(claim, user) -> dict:
             }
     if ("review_details" in claim.keys()):
         data["review_details"] = claim["review_details"]
+    if ("video" in claim.keys()):
+        data["video"] = claim["video"]
     if (user):
         data["user_id"] = str(user["_id"])
         return data
