@@ -256,6 +256,21 @@ export default function UserDashboard() {
                   </div>
                 )}
               </div>
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="video"
+                >
+                  Full view Video
+                </label>
+                <input
+                  aria-label="video"
+                  name="video"
+                  type="file"
+                  accept="video/*"
+                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700  leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
               {fakeImages && (
                 <div className="bg-gray-100 p-1 rounded-md font-bold text-red-500 flex gap-x-1 items-center">
                   <svg
